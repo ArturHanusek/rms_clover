@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2018/09/17 12:04:43.000.203,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\CloverRMSProject.groupproj=C:\Users\hanys\Documents\RAD Studio\Projects\ProjectGroup1.groupproj</Transaction>
+  </Transactions>
+	<Default.Personality>
+		<Projects ActiveProject="E:\Dropbox\dev\clover_rms\Clover\CloverRMS\uninstallHooks.dproj"/>
+	</Default.Personality>
+</BorlandProject>

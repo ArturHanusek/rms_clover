@@ -1,0 +1,54 @@
+unit uTenderEnd;
+
+{$WARN SYMBOL_PLATFORM OFF}
+
+interface
+
+uses
+  ComObj, ActiveX, CloverRMS_TLB, StdVcl;
+
+type
+  TTenderEnd = class(TAutoObject, ITenderEnd)
+  protected
+    function Process(const Session: IDispatch): WordBool; stdcall;
+
+  end;
+
+implementation
+
+uses ComServ, Dialogs, SysUtils, Windows, uRMSSession, uRMS_SO, Classes;
+
+function TTenderEnd.Process(const Session: IDispatch): WordBool;
+var
+  recordSet: TRecordSet;
+  tenderID : Integer;
+  tender   : TRMSTender;
+  saleResult : Integer;
+begin
+  recordSet := SQLSelect('SELECT ID FROM Tender WHERE Code = ''CLOVER'';');
+
+  if recordSet.RecordCount = 0 then
+  Begin
+    Result := False;
+    exit;
+  End;
+
+  tenderID := recordSet.ByName('ID');
+
+  tender := Transaction.Tenders.Find(tenderID);
+
+  if tender.AmountIn = 0 then
+  Begin
+    Result := True;
+    exit;
+  End;
+
+  saleResult := WinExecAndWait32('D:\Dropbox\dev\clover_rms\CloverRMS\CloverRMS\bin\Debug\CloverRMS.exe ' + FloatToStr(tender.AmountIn * 100), SW_SHOW);
+
+  Result := saleResult = 0;
+end;
+
+initialization
+  TAutoObjectFactory.Create(ComServer, TTenderEnd, Class_TenderEnd,
+    ciMultiInstance, tmApartment);
+end.

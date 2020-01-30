@@ -1,0 +1,30 @@
+unit uTenderEnd;
+
+{$WARN SYMBOL_PLATFORM OFF}
+
+interface
+
+uses
+  ComObj, ActiveX, CloverRMS_TLB, StdVcl;
+
+type
+  TTenderEnd = class(TAutoObject, ITenderEnd)
+  protected
+    function Process(const Session: IDispatch): WordBool; stdcall;
+
+  end;
+
+implementation
+
+uses ComServ, Dialogs;
+
+function TTenderEnd.Process(const Session: IDispatch): WordBool;
+begin
+  ShowMessage('test');
+  Result := False;
+end;
+
+initialization
+  TAutoObjectFactory.Create(ComServer, TTenderEnd, Class_TenderEnd,
+    ciMultiInstance, tmApartment);
+end.

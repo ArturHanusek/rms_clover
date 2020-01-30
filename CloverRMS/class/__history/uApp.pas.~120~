@@ -1,0 +1,194 @@
+unit uApp;
+
+interface
+
+uses uRMSSession, uRMS_SO, Classes;
+
+type
+  TApp = class(TRMS_Session)
+  private
+    procedure makeSale(amount: double; var saleResult: Integer);
+    procedure makeRefund(amount: double; var saleResult: Integer);
+
+    function findTenderByCode(tender_code: string; var tender: TRMSTender): Boolean;
+
+  published
+    property OnTenderEnd;
+
+  public
+    constructor Create; override;
+    procedure DoOnTenderEnd(var Result: WordBool);
+  end;
+
+var
+  App: TApp;
+
+implementation
+
+{ TApp }
+
+uses uDebuger, Windows, SysUtils, Dialogs;
+
+function WinExecAndWait32(FileName: string; Visibility: Integer): Longword;
+var { by Pat Ritchey }
+  zAppName   : array [0 .. 512] of Char;
+  zCurDir    : array [0 .. 255] of Char;
+  WorkDir    : string;
+  StartupInfo: TStartupInfo;
+  ProcessInfo: TProcessInformation;
+begin
+  StrPCopy(zAppName, FileName);
+  GetDir(0, WorkDir);
+  StrPCopy(zCurDir, WorkDir);
+  FillChar(StartupInfo, SizeOf(StartupInfo), #0);
+  StartupInfo.cb          := SizeOf(StartupInfo);
+  StartupInfo.dwFlags     := STARTF_USESHOWWINDOW;
+  StartupInfo.wShowWindow := Visibility;
+  if not CreateProcess(nil, zAppName, // pointer to command line string
+    nil,                              // pointer to process security attributes
+    nil,                              // pointer to thread security attributes
+    False,                            // handle inheritance flag
+    CREATE_NEW_CONSOLE or             // creation flags
+    NORMAL_PRIORITY_CLASS, nil,       // pointer to new environment block
+    nil,                              // pointer to current directory name
+    StartupInfo,                      // pointer to STARTUPINFO
+    ProcessInfo)                      // pointer to PROCESS_INF
+  then
+    Result := WAIT_FAILED
+  else
+  begin
+    WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
+    GetExitCodeProcess(ProcessInfo.hProcess, Result);
+    CloseHandle(ProcessInfo.hProcess);
+    CloseHandle(ProcessInfo.hThread);
+  end;
+end; { WinExecAndWait32 }
+
+constructor TApp.Create;
+begin
+  inherited;
+
+  Debug.AppName          := 'Your IT - Clover Integration';
+  Debug.EnableLiveViewer := True;
+  Debug.Verbose          := VerboseLvlAll;
+
+  with RMSRequiredHooks.New_TenderEnd do
+  Begin
+    Caption     := 'Clover Integration - Tender End';
+    Description := '';
+    ObjectName  := 'CloverRMS.TenderEnd';
+  End;
+
+  OnTenderEnd := DoOnTenderEnd;
+
+end;
+
+procedure TApp.DoOnTenderEnd(var Result: WordBool);
+var
+  tender    : TRMSTender;
+  saleResult: Integer;
+begin
+
+  Result := False;
+
+  if not findTenderByCode('CLOVER', tender) then
+  Begin;
+    Debug.Send('Tender with code CLOVER not found');
+    Result := True;
+    exit;
+  End;
+
+  ShowMessage('Test');
+
+  if (tender.amount = 0) then
+  Begin
+    Debug.Send('Tender amount is 0, exiting');
+    Result := True;
+    exit;
+  End;
+
+  ShowMessage('Test');
+
+  if tender.AmountOut > Abs(Transaction.Total) then
+  Begin
+    Debug.Send('Refund amount cannot exceed transaction total');
+    MessageDlg('Refund amount cannot exceed transaction total', mtError, [mbOK], 0);
+    Result := False;
+    exit;
+  End;
+
+  ShowMessage('Test');
+
+  if tender.AmountIn > 0 then
+  Begin
+    Debug.Send('Making sale:', tender.AmountIn);
+    makeSale(tender.AmountIn, saleResult);
+    Result := saleResult = 1;
+    exit; // early exit if transaction processed succesfully
+  End;
+
+  ShowMessage('Test');
+
+  if tender.AmountOut > 0 then
+  Begin
+    Debug.Send('Making refund:', tender.AmountIn);
+    makeRefund(tender.AmountOut, saleResult);
+    Result := saleResult = 1;
+    exit;
+  End;
+
+end;
+
+function TApp.findTenderByCode(tender_code: string; var tender: TRMSTender): Boolean;
+var
+  recordSet: TRecordSet;
+  tenderID : Integer;
+begin
+
+  recordSet := SQLSelect('SELECT ID FROM Tender WHERE Code = ''' + tender_code + ''';');
+
+  if recordSet.RecordCount = 0 then
+  Begin
+    Result := False;
+    exit;
+  End;
+
+  Result := True;
+
+  tenderID := recordSet.ByName('ID');
+
+  tender := Transaction.Tenders.Find(tenderID);
+
+end;
+
+procedure TApp.makeRefund(amount: double; var saleResult: Integer);
+begin
+  makeSale(-1 * amount, saleResult);
+end;
+
+procedure TApp.makeSale(amount: double; var saleResult: Integer);
+var
+  clover_cmd_path: string;
+  full_run_path  : string;
+  cents_amount   : Integer;
+begin
+
+  clover_cmd_path := 'D:\Dropbox\dev\clover_rms\Clover\CloverCMD\bin\Debug\CloverCMD.exe';
+  clover_cmd_path := 'C:\CloverCMD\CloverCMD.exe';
+
+  if not FileExists(clover_cmd_path) then
+  Begin
+    MessageDlg('CloverCMD.exe cannot be located', mtError, [mbOK], 0);
+    saleResult := 2002;
+    exit;
+  End;
+
+  cents_amount := Trunc(amount * 100);
+
+  full_run_path := Format('%s %d', [clover_cmd_path, cents_amount]);
+
+  saleResult := WinExecAndWait32(full_run_path, SW_SHOW);
+
+end;
+
+end.

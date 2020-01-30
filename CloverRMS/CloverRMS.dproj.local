@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2014/03/03 19:09:26.000.761,=C:\Users\hanys\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2014/03/10 11:34:31.000.873,=C:\Users\hanys\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2015/06/25 20:18:33.000.771,=C:\Users\hanys\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2015/06/25 20:40:21.000.733,=C:\Users\hanys\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2018/05/15 10:53:21.000.807,=C:\Users\hanys\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2018/05/15 11:04:58.000.080,=C:\Users\hanys\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2018/05/15 11:24:16.000.963,=C:\Users\hanys\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2018/09/11 13:27:21.000.578,=C:\Users\hanys\Documents\RAD Studio\Projects\Project1_TLB.pas</Transaction>
+    <Transaction>2018/09/11 13:27:21.000.491,=C:\Users\hanys\Documents\RAD Studio\Projects\Project1.ridl</Transaction>
+    <Transaction>2018/09/11 13:27:35.000.939,C:\Users\hanys\Documents\RAD Studio\Projects\CloverRMS_TLB.pas=C:\Users\hanys\Documents\RAD Studio\Projects\Project1_TLB.pas</Transaction>
+    <Transaction>2018/09/11 13:28:06.000.314,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\CloverRMS_TLB.pas=C:\Users\hanys\Documents\RAD Studio\Projects\CloverRMS_TLB.pas</Transaction>
+    <Transaction>2018/09/11 13:28:06.000.217,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\CloverRMS.ridl=C:\Users\hanys\Documents\RAD Studio\Projects\Project1.ridl</Transaction>
+    <Transaction>2018/09/11 13:28:35.000.759,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\CloverRMSProject.dproj=C:\Users\hanys\Documents\RAD Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2018/09/11 13:28:53.000.699,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\CloverRMS.dproj=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\CloverRMSProject.dproj</Transaction>
+    <Transaction>2018/09/11 13:29:26.000.261,=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\Unit1.pas</Transaction>
+    <Transaction>2018/09/11 13:38:19.000.497,=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\Unit1.pas</Transaction>
+    <Transaction>2018/09/11 13:38:49.000.331,=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\Unit1.pas</Transaction>
+    <Transaction>2018/09/11 13:39:45.000.386,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\class\TenderEnd.pas=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\Unit1.pas</Transaction>
+    <Transaction>2018/09/11 13:39:54.000.557,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\class\uTenderEnd.pas=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\class\TenderEnd.pas</Transaction>
+    <Transaction>2018/09/11 14:25:42.000.606,=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\Unit1.pas</Transaction>
+    <Transaction>2018/09/11 14:26:11.000.074,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\class\uApp.pas=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\Unit1.pas</Transaction>
+  </Transactions>
+</BorlandProject>

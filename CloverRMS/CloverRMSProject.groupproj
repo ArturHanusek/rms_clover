@@ -1,0 +1,60 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{E3789156-E7D8-4E76-BC4E-710234AB86CC}</ProjectGuid>
+		</PropertyGroup>
+		<ItemGroup>
+			<Projects Include="CloverRMS.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="installHooks.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="uninstallHooks.dproj">
+				<Dependencies/>
+			</Projects>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Default.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Default.Personality/>
+			</BorlandProject>
+		</ProjectExtensions>
+		<Target Name="CloverRMS">
+			<MSBuild Projects="CloverRMS.dproj"/>
+		</Target>
+		<Target Name="CloverRMS:Clean">
+			<MSBuild Projects="CloverRMS.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="CloverRMS:Make">
+			<MSBuild Projects="CloverRMS.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="installHooks">
+			<MSBuild Projects="installHooks.dproj"/>
+		</Target>
+		<Target Name="installHooks:Clean">
+			<MSBuild Projects="installHooks.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="installHooks:Make">
+			<MSBuild Projects="installHooks.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="uninstallHooks">
+			<MSBuild Projects="uninstallHooks.dproj"/>
+		</Target>
+		<Target Name="uninstallHooks:Clean">
+			<MSBuild Projects="uninstallHooks.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="uninstallHooks:Make">
+			<MSBuild Projects="uninstallHooks.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="Build">
+			<CallTarget Targets="CloverRMS;installHooks;uninstallHooks"/>
+		</Target>
+		<Target Name="Clean">
+			<CallTarget Targets="CloverRMS:Clean;installHooks:Clean;uninstallHooks:Clean"/>
+		</Target>
+		<Target Name="Make">
+			<CallTarget Targets="CloverRMS:Make;installHooks:Make;uninstallHooks:Make"/>
+		</Target>
+		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
+	</Project>
