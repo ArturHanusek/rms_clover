@@ -57,7 +57,7 @@ namespace CloverRMS
 
             this.GetAmount();
 
-             Clover.InitializeConnector();
+            Clover.InitializeConnector();
 
         }
 
@@ -74,7 +74,7 @@ namespace CloverRMS
 
             if (args.Length == 1)
             {
-                ShowErrorAndExit("Charge amount", "Amount is not specified");
+                ShowErrorAndExit("Charge amount", "Amount is not specified",128);
             }
 
             if (Int32.TryParse(args[1], out int amount) == false)
@@ -133,10 +133,10 @@ namespace CloverRMS
             }, null);
         }
 
-        public void ShowErrorAndExit(String Title, String Msg)
+        public void ShowErrorAndExit(String Title, String Msg, int ExitCode)
         {
             ShowError(Title, Msg);
-            Program.ExitFailed(2002);
+            Program.ExitFailed(ExitCode);
         }
 
         public void SetConnectedStatusLabelText(String Text)
@@ -165,6 +165,8 @@ namespace CloverRMS
                 }
 
                 Clover.DoOnSaleResponse = OnSaleResponse;
+                Clover.DoOnManualRefundResponse = OnManualRefundResponse;
+
                 Clover.ProcessTransaction(this.IsManualPayment());
 
                 buttonCancel.Enabled = true;
@@ -176,11 +178,23 @@ namespace CloverRMS
             }
         }
 
-        void ProcessManualCardEntryTransaction(SaleResponse response)
+        void ProcessTransactionCNP()
         {
             Clover.DoOnSaleResponse = OnSaleResponse;
 
-            Clover.ProcessTransaction(true);
+            Clover.DoOnManualRefundResponse = OnManualRefundResponse;
+
+            Clover.ProcessTransactionCNP();
+        }
+
+        void ProcessManualCardEntryTransaction(SaleResponse response)
+        {
+            this.ProcessTransactionCNP();
+        }
+
+        void ProcessManualCardEntryRefund(ManualRefundResponse response)
+        {
+            this.ProcessTransactionCNP();
         }
 
         private void Click_labelCompanySerial(object sender, EventArgs e)
@@ -206,8 +220,7 @@ namespace CloverRMS
                         break;
 
                     default:
-                        ShowError(response.Reason, response.Message);
-                        Program.ExitFailed(Convert.ToInt32(response.Result));
+                        ShowErrorAndExit(response.Reason, response.Message, Convert.ToInt32(response.Result));
                         break;
                 }
              
@@ -227,31 +240,8 @@ namespace CloverRMS
                         break;
 
                     default:
-                        ShowError(response.Reason, response.Message);
-                        Program.ExitFailed(Convert.ToInt32(response.Result));
+                        ShowErrorAndExit(response.Reason, response.Message, Convert.ToInt32(response.Result));
                         break;
-                }
-
-            }, null);
-
-        }
-
-        public void VerifySignatureRequest(VerifySignatureRequest request)
-        {
-            uiThread.Send(delegate (object state) {
-                this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);      
-
-                var dialogResult = MessageBox.Show(this, "Is signature correct?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-                this.Log(dialogResult.ToString());
-
-                if (dialogResult == DialogResult.Yes)
-                {
-                    request.Accept();
-                }
-                else
-                {
-                    request.Reject();
                 }
 
             }, null);
@@ -261,6 +251,8 @@ namespace CloverRMS
         private void ButtonManualCard_Click(object sender, EventArgs e)
         { 
             Clover.DoOnSaleResponse = ProcessManualCardEntryTransaction;
+
+            Clover.DoOnManualRefundResponse = ProcessManualCardEntryRefund;
 
             Clover.CancelTransaction();
 

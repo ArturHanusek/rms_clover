@@ -16,11 +16,18 @@ namespace CloverRMS
         private int _amount = 0;
 
         bool Connected = false;
-        
+
 
         public delegate void DoOnSaleResponseMethod(SaleResponse response);
 
         public DoOnSaleResponseMethod DoOnSaleResponse;
+
+
+
+        public delegate void DoOnManualRefundResponseMethod(ManualRefundResponse response);
+
+        public DoOnManualRefundResponseMethod DoOnManualRefundResponse;
+
 
 
         public Clover SetAmount(int amount)
@@ -106,6 +113,13 @@ namespace CloverRMS
             }
         }
 
+        public void ProcessTransactionCNP()
+        {
+            this.Log("ProcessTransactionCNP()");
+            this.ProcessTransaction(true);
+        }
+
+
         private void Charge(int Amount, bool isManualCardEntry)
         {
             SaleRequest request = new SaleRequest()
@@ -139,6 +153,7 @@ namespace CloverRMS
 
             cloverConnector.ManualRefund(request);
         }
+
 
         public void CancelTransaction()
         {
@@ -218,7 +233,8 @@ namespace CloverRMS
                 deviceErrorEvent.ToString()+
                 ")"
                 );
-            Form.ShowError("Device Error", deviceErrorEvent.Message);
+
+            Form.ShowErrorAndExit("Device Error", deviceErrorEvent.Message, Convert.ToInt32(deviceErrorEvent.Code));
         }
 
         public void OnDeviceReady(MerchantInfo merchantInfo)
@@ -238,13 +254,19 @@ namespace CloverRMS
                 " Result: " +response.Result.ToString()
                );
 
+
             DoOnSaleResponse(response);
         }
 
         public void OnManualRefundResponse(ManualRefundResponse response)
         {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            Form.OnManualRefundResponse(response);
+            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name +
+                ": " +
+                " Message: " + response.Message +
+                " Result: " + response.Result.ToString()
+               );
+
+            DoOnManualRefundResponse(response);
         }
 
         public void OnVerifySignatureRequest(VerifySignatureRequest request)
@@ -268,8 +290,6 @@ namespace CloverRMS
                 }
 
             }, null);
-
-            //Form.VerifySignatureRequest(request);
         }
 
 

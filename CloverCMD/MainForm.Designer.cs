@@ -150,7 +150,7 @@
             this.lblBuildDate.Name = "lblBuildDate";
             this.lblBuildDate.Size = new System.Drawing.Size(91, 13);
             this.lblBuildDate.TabIndex = 11;
-            this.lblBuildDate.Text = "Build 2020/02/20";
+            this.lblBuildDate.Text = "Build 2020/02/21";
             // 
             // MainForm
             // 
