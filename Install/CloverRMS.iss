@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Clover RMS Integration"
-#define MyAppVersion "20190301"
+#define MyAppVersion "2020.02.25"
 #define MyAppPublisher "Your IT Solutions Ltd."
 #define MyAppURL "https;//products.management"
 #define MyAppExeName "CloverCMD.exe"
@@ -22,9 +22,10 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\CloverCMD
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
-OutputBaseFilename=CloverRMS
 Compression=lzma
 SolidCompression=yes
+OutputDir=.\
+OutputBaseFilename=CloverRMS_Setup
 
 [Languages]                                   
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -48,7 +49,6 @@ Source: "D:\Dropbox\dev\clover_rms\Clover\Install\CloverCMD\RestSharp.dll"; Dest
 Source: "D:\Dropbox\dev\clover_rms\Clover\Install\CloverCMD\SuperSocket.ClientEngine.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Dropbox\dev\clover_rms\Clover\Install\CloverCMD\Uninstal.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Dropbox\dev\clover_rms\Clover\Install\CloverCMD\uninstallHooks.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Dropbox\dev\clover_rms\Clover\Install\CloverCMD\WebSocket4Net.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
