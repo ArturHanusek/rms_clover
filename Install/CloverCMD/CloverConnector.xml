@@ -65,6 +65,9 @@
         <member name="M:Clover.RemotePay.CloverEventConnector.CapturePreAuth(com.clover.remotepay.sdk.CapturePreAuthRequest)">
             <inheritdoc />
         </member>
+        <member name="M:Clover.RemotePay.CloverEventConnector.IncrementPreAuth(com.clover.remotepay.sdk.IncrementPreAuthRequest)">
+            <inheritdoc />
+        </member>
         <member name="M:Clover.RemotePay.CloverEventConnector.TipAdjustAuth(com.clover.remotepay.sdk.TipAdjustAuthRequest)">
             <inheritdoc />
         </member>
@@ -194,6 +197,11 @@
         <member name="E:Clover.RemotePay.CloverEventConnector.CapturePreAuthResponse">
             <summary>
             Capture PreAuth call has completed with these details (success or failure)
+            </summary>
+        </member>
+        <member name="E:Clover.RemotePay.CloverEventConnector.IncrementPreAuthResponse">
+            <summary>
+            Increment PreAuth call has completed with these details (success or failure)
             </summary>
         </member>
         <member name="E:Clover.RemotePay.CloverEventConnector.VerifySignatureRequest">
@@ -530,6 +538,13 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:com.clover.remotepay.sdk.CloverConnector.IncrementPreAuth(com.clover.remotepay.sdk.IncrementPreAuthRequest)">
+            <summary>
+            Increment a previous Auth. Note: Should only be called if request's PaymentID is from an AuthResponse
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:com.clover.remotepay.sdk.CloverConnector.TipAdjustAuth(com.clover.remotepay.sdk.TipAdjustAuthRequest)">
             <summary>
             Adjust the tip for a previous Auth. Note: Should only be called if request's PaymentID is from an AuthResponse
@@ -720,6 +735,13 @@
             </summary>
             <param name="response">The CapturePreAuthResponse to the transaction 
             request.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnIncrementPreAuthResponse(com.clover.remotepay.sdk.IncrementPreAuthResponse)">
+            <summary>
+            Called in response to an IncrementPreAuth() request.
+            Contains the authorization if successful.
+            </summary>
+            <param name="response">The IncrementPreAuthResponse to the transaction</param>
         </member>
         <member name="M:com.clover.remotepay.sdk.ICloverConnectorListener.OnVerifySignatureRequest(com.clover.remotepay.sdk.VerifySignatureRequest)">
             <summary>
@@ -1077,6 +1099,13 @@
             called if the request's PaymentID is from a PreAuthResponse.
             </summary>
             <param name="request">The CapturePreAuthRequest details.</param>
+        </member>
+        <member name="M:com.clover.remotepay.sdk.ICloverConnector.IncrementPreAuth(com.clover.remotepay.sdk.IncrementPreAuthRequest)">
+            <summary>
+            Increments the amount of a previous PreAuth Payment. Note: Should only be
+            called if the request's PaymentID is from a PreAuthResponse.
+            </summary>
+            <param name="request">The IncrementPreAuthRequest details.</param>
         </member>
         <member name="M:com.clover.remotepay.sdk.ICloverConnector.TipAdjustAuth(com.clover.remotepay.sdk.TipAdjustAuthRequest)">
             <summary>
@@ -1588,6 +1617,31 @@
             <summary>
             This request should be used for capturing payments obtained from
             a PreAuth response
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.IncrementPreAuthRequest">
+            <summary>
+            Increments a previously made pre auth
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.IncrementPreAuthRequest.Amount">
+            <summary>
+            The amount by which to increment the pre-auth.
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.IncrementPreAuthRequest.PaymentID">
+            <summary>
+            The preauth to be incremented. This id should be pulled from the Payment.paymentId field in the PreAuthResponse.
+            </summary>
+        </member>
+        <member name="T:com.clover.remotepay.sdk.IncrementPreAuthResponse">
+            <summary>
+            The result of an attempt to increment a pre auth
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.IncrementPreAuthResponse.Authorization">
+            <summary>
+            The resulting Authorization
             </summary>
         </member>
         <member name="T:com.clover.remotepay.sdk.VaultCardResponse">

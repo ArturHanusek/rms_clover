@@ -134,6 +134,7 @@ namespace CloverRMS
             }
 
             request.DisableCashback = true;
+            request.DisableReceiptSelection = true;
             
             cloverConnector.Sale(request);
         }
@@ -254,7 +255,6 @@ namespace CloverRMS
                 " Result: " +response.Result.ToString()
                );
 
-
             DoOnSaleResponse(response);
         }
 
@@ -291,12 +291,6 @@ namespace CloverRMS
 
             }, null);
         }
-
-
-
-
-
-
 
         public void OnAuthResponse(AuthResponse response)
         {

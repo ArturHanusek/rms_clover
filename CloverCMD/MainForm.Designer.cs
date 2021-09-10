@@ -103,7 +103,6 @@
             this.buttonCancel.AutoSize = true;
             this.buttonCancel.BackColor = System.Drawing.Color.LightGray;
             this.buttonCancel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.buttonCancel.Enabled = false;
             this.buttonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonCancel.Location = new System.Drawing.Point(0, 101);
             this.buttonCancel.Margin = new System.Windows.Forms.Padding(0);

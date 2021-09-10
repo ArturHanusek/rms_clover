@@ -21,6 +21,7 @@ namespace CloverRMS
         public SynchronizationContext uiThread;
 
 
+        private bool isInitialized = false;
         private int centAmount = 0;
 
 
@@ -56,9 +57,6 @@ namespace CloverRMS
             #endif
 
             this.GetAmount();
-
-            Clover.InitializeConnector();
-
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -74,13 +72,17 @@ namespace CloverRMS
 
             if (args.Length == 1)
             {
-                ShowErrorAndExit("Charge amount", "Amount is not specified",128);
+                SetStatus("Amount is not specified");
+                return;
+                //ShowErrorAndExit("Charge amount", "Amount is not specified",128);
             }
 
             if (Int32.TryParse(args[1], out int amount) == false)
             {
-                ShowError("Incorrect value", "Incorrect tender value. Expecting amount in cents");
-                Program.ExitFailed(2001);
+                //ShowError("Incorrect value", "Incorrect tender value. Expecting amount in cents");
+                SetStatus("Incorrect tender value. Expecting amount in cents");
+                return;
+                //Program.ExitFailed(2001);
             };
 
             this.centAmount = amount;
@@ -150,7 +152,12 @@ namespace CloverRMS
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
-            if (Clover.IsDeviceConnected())
+            if (isInitialized == false)
+            {
+                Clover.InitializeConnector();
+                isInitialized = true;
+            } 
+            else if (Clover.IsDeviceConnected())
             {
                 timer.Enabled = false;
 
@@ -162,6 +169,9 @@ namespace CloverRMS
                 {
                     SetStatus("Card Refund");
                     this.BackColor = Color.Red;
+                } else
+                {
+                    SetStatus("Charge amount not specified");
                 }
 
                 Clover.DoOnSaleResponse = OnSaleResponse;
@@ -169,7 +179,6 @@ namespace CloverRMS
 
                 Clover.ProcessTransaction(this.IsManualPayment());
 
-                buttonCancel.Enabled = true;
                 buttonManualCard.Enabled = true;
 
             } else
@@ -204,7 +213,15 @@ namespace CloverRMS
 
         private void ButtonCancel_Click(object sender, EventArgs e)
         {
-            Clover.CancelTransaction();
+            if (this.isInitialized)
+            {
+                if (Clover.IsDeviceConnected())
+                {
+                    Clover.CancelTransaction();
+                }
+            }
+
+            Program.ExitFailed();
         }
 
 
