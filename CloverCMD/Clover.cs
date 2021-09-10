@@ -465,5 +465,10 @@ namespace CloverRMS
         {
             this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
         }
+
+        public void OnIncrementPreAuthResponse(IncrementPreAuthResponse response)
+        {
+            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
+        }
     }
 }
