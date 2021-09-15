@@ -164,8 +164,6 @@ var
   full_run_path  : string;
   cents_amount   : Integer;
 begin
-
-  clover_cmd_path := 'D:\Dropbox\dev\clover_rms\Clover\CloverCMD\bin\Debug\CloverCMD.exe';
   clover_cmd_path := 'C:\CloverCMD\CloverCMD.exe';
 
   if not FileExists(clover_cmd_path) then
@@ -175,12 +173,11 @@ begin
     exit;
   End;
 
-  cents_amount := Trunc(amount * 100);
+  cents_amount := Round(amount * 100);
 
   full_run_path := Format('%s %d', [clover_cmd_path, cents_amount]);
 
   saleResult := WinExecAndWait32(full_run_path, SW_SHOW);
-
 end;
 
 end.

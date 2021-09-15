@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>2018/09/17 12:05:20.000.386,C:\Users\hanys\Documents\RAD Studio\Projects\Project1.dproj=C:\Users\hanys\Documents\RAD Studio\Projects\uninstallHooks.dproj</Transaction>
+    <Transaction>2018/09/17 12:05:20.000.386,C:\Users\hanys\Documents\RAD Studio\Projects\uninstallHooks.dproj=C:\Users\hanys\Documents\RAD Studio\Projects\Project1.dproj</Transaction>
     <Transaction>2018/09/18 11:34:09.000.065,=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\class\uApp.pas</Transaction>
-    <Transaction>2018/09/18 11:35:11.000.412,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\uninstallHooks.dproj=C:\Users\hanys\Documents\RAD Studio\Projects\uninstallHooks.dproj</Transaction>
+    <Transaction>2018/09/18 11:35:11.000.412,C:\Users\hanys\Documents\RAD Studio\Projects\uninstallHooks.dproj=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\uninstallHooks.dproj</Transaction>
   </Transactions>
 </BorlandProject>

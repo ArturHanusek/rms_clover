@@ -39,6 +39,7 @@
             this.labelTotal = new System.Windows.Forms.Label();
             this.labelStatus = new System.Windows.Forms.Label();
             this.lblBuildDate = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.panelCenterWindow.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -149,7 +150,19 @@
             this.lblBuildDate.Name = "lblBuildDate";
             this.lblBuildDate.Size = new System.Drawing.Size(91, 13);
             this.lblBuildDate.TabIndex = 11;
-            this.lblBuildDate.Text = "Build 2020/02/21";
+            this.lblBuildDate.Text = "Build 2021/09/15";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(627, 658);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(92, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Clover SDK: 4.0.5";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // MainForm
             // 
@@ -158,6 +171,7 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.DimGray;
             this.ClientSize = new System.Drawing.Size(1167, 684);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.lblBuildDate);
             this.Controls.Add(this.panelCenterWindow);
             this.Controls.Add(this.labelCompanySerial);
@@ -187,6 +201,7 @@
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Button buttonManualCard;
         private System.Windows.Forms.Label lblBuildDate;
+        private System.Windows.Forms.Label label1;
     }
 }
 

@@ -10,17 +10,17 @@
     <Transaction>2018/05/15 11:24:16.000.963,=C:\Users\hanys\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
     <Transaction>2018/09/11 13:27:21.000.578,=C:\Users\hanys\Documents\RAD Studio\Projects\Project1_TLB.pas</Transaction>
     <Transaction>2018/09/11 13:27:21.000.491,=C:\Users\hanys\Documents\RAD Studio\Projects\Project1.ridl</Transaction>
-    <Transaction>2018/09/11 13:27:35.000.939,C:\Users\hanys\Documents\RAD Studio\Projects\CloverRMS_TLB.pas=C:\Users\hanys\Documents\RAD Studio\Projects\Project1_TLB.pas</Transaction>
-    <Transaction>2018/09/11 13:28:06.000.314,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\CloverRMS_TLB.pas=C:\Users\hanys\Documents\RAD Studio\Projects\CloverRMS_TLB.pas</Transaction>
-    <Transaction>2018/09/11 13:28:06.000.217,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\CloverRMS.ridl=C:\Users\hanys\Documents\RAD Studio\Projects\Project1.ridl</Transaction>
-    <Transaction>2018/09/11 13:28:35.000.759,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\CloverRMSProject.dproj=C:\Users\hanys\Documents\RAD Studio\Projects\Project1.dproj</Transaction>
-    <Transaction>2018/09/11 13:28:53.000.699,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\CloverRMS.dproj=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\CloverRMSProject.dproj</Transaction>
+    <Transaction>2018/09/11 13:27:35.000.939,C:\Users\hanys\Documents\RAD Studio\Projects\Project1_TLB.pas=C:\Users\hanys\Documents\RAD Studio\Projects\CloverRMS_TLB.pas</Transaction>
+    <Transaction>2018/09/11 13:28:06.000.217,C:\Users\hanys\Documents\RAD Studio\Projects\Project1.ridl=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\CloverRMS.ridl</Transaction>
+    <Transaction>2018/09/11 13:28:06.000.314,C:\Users\hanys\Documents\RAD Studio\Projects\CloverRMS_TLB.pas=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\CloverRMS_TLB.pas</Transaction>
+    <Transaction>2018/09/11 13:28:35.000.759,C:\Users\hanys\Documents\RAD Studio\Projects\Project1.dproj=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\CloverRMSProject.dproj</Transaction>
+    <Transaction>2018/09/11 13:28:53.000.699,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\CloverRMSProject.dproj=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\CloverRMS.dproj</Transaction>
     <Transaction>2018/09/11 13:29:26.000.261,=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\Unit1.pas</Transaction>
     <Transaction>2018/09/11 13:38:19.000.497,=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\Unit1.pas</Transaction>
     <Transaction>2018/09/11 13:38:49.000.331,=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\Unit1.pas</Transaction>
-    <Transaction>2018/09/11 13:39:45.000.386,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\class\TenderEnd.pas=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\Unit1.pas</Transaction>
-    <Transaction>2018/09/11 13:39:54.000.557,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\class\uTenderEnd.pas=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\class\TenderEnd.pas</Transaction>
+    <Transaction>2018/09/11 13:39:45.000.386,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\Unit1.pas=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\class\TenderEnd.pas</Transaction>
+    <Transaction>2018/09/11 13:39:54.000.557,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\class\TenderEnd.pas=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\class\uTenderEnd.pas</Transaction>
     <Transaction>2018/09/11 14:25:42.000.606,=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\Unit1.pas</Transaction>
-    <Transaction>2018/09/11 14:26:11.000.074,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\class\uApp.pas=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\Unit1.pas</Transaction>
+    <Transaction>2018/09/11 14:26:11.000.074,E:\Dropbox\dev\clover_rms\Clover\CloverRMS\Unit1.pas=E:\Dropbox\dev\clover_rms\Clover\CloverRMS\class\uApp.pas</Transaction>
   </Transactions>
 </BorlandProject>
