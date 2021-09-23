@@ -134,7 +134,6 @@ namespace CloverRMS
             }
 
             request.DisableCashback = true;
-            request.DisableReceiptSelection = true;
             
             cloverConnector.Sale(request);
         }

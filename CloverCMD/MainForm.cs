@@ -74,15 +74,12 @@ namespace CloverRMS
             {
                 SetStatus("Amount is not specified");
                 return;
-                //ShowErrorAndExit("Charge amount", "Amount is not specified",128);
             }
 
             if (Int32.TryParse(args[1], out int amount) == false)
             {
-                //ShowError("Incorrect value", "Incorrect tender value. Expecting amount in cents");
                 SetStatus("Incorrect tender value. Expecting amount in cents");
                 return;
-                //Program.ExitFailed(2001);
             };
 
             this.centAmount = amount;
