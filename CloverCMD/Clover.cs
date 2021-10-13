@@ -131,6 +131,7 @@ namespace CloverRMS
             if (isManualCardEntry)
             {
                 request.CardEntryMethods = (com.clover.remotepay.sdk.CloverConnector.CARD_ENTRY_METHOD_MANUAL);
+                request.CardNotPresent = true;
             }
 
             request.DisableCashback = true;
@@ -149,7 +150,9 @@ namespace CloverRMS
             if (isManualCardEntry)
             {
                 request.CardEntryMethods = (com.clover.remotepay.sdk.CloverConnector.CARD_ENTRY_METHOD_MANUAL);
+                request.CardNotPresent = true;
             }
+
 
             cloverConnector.ManualRefund(request);
         }
