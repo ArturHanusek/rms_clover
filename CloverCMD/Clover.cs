@@ -14,6 +14,7 @@ namespace CloverRMS
 
 
         private int _amount = 0;
+        private string _guid = "";
 
         bool Connected = false;
 
@@ -33,6 +34,12 @@ namespace CloverRMS
         public Clover SetAmount(int amount)
         {
             this._amount = amount;
+            return this;
+        }
+
+        public Clover SetTransactionGuid(string guid)
+        {
+            this._guid = guid;
             return this;
         }
 
@@ -122,9 +129,14 @@ namespace CloverRMS
 
         private void Charge(int Amount, bool isManualCardEntry)
         {
+            if (this._guid == "")
+            {
+                this._guid = ExternalIDUtil.GenerateRandomString(32);
+            }
+
             SaleRequest request = new SaleRequest()
             {
-                ExternalId = ExternalIDUtil.GenerateRandomString(32),
+                ExternalId = this._guid,
                 Amount = Amount
             };
 
@@ -141,9 +153,14 @@ namespace CloverRMS
 
         private void Refund(int Amount, bool isManualCardEntry)
         {
+            if (this._guid == "")
+            {
+                this._guid = ExternalIDUtil.GenerateRandomString(32);
+            }
+
             ManualRefundRequest request = new ManualRefundRequest()
             {
-                ExternalId = ExternalIDUtil.GenerateRandomString(32),
+                ExternalId = this._guid,
                 Amount = -Amount
             };
 

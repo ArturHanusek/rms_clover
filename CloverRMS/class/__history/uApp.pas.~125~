@@ -75,7 +75,7 @@ begin
   with RMSRequiredHooks.New_TenderEnd do
   Begin
     Caption     := 'Clover Integration - Tender End';
-    Description := 'Display window with TransactoinReference option list';
+    Description := '';
     ObjectName  := 'CloverRMS.TenderEnd';
   End;
 
@@ -89,28 +89,21 @@ var
   saleResult: Integer;
 begin
 
-  ShowMessage('Test');
   Result := False;
 
   if not findTenderByCode('CLOVER', tender) then
-  Begin
-    ShowMessage('Tender with code CLOVER not found');
+  Begin;
     Debug.Send('Tender with code CLOVER not found');
     Result := True;
     exit;
   End;
 
-  ShowMessage('Test');
-
   if (tender.amount = 0) then
   Begin
-    ShowMessage('Tender amount is 0, exiting');
     Debug.Send('Tender amount is 0, exiting');
     Result := True;
     exit;
   End;
-
-  ShowMessage('Test');
 
   if tender.AmountOut > Abs(Transaction.Total) then
   Begin
@@ -120,27 +113,26 @@ begin
     exit;
   End;
 
-  ShowMessage('Test');
 
-  if tender.AmountIn > 0 then
-  Begin
-    ShowMessage('Making sale:');
-    Debug.Send('Making sale:', tender.AmountIn);
-    makeSale(tender.AmountIn, saleResult);
-    Result := saleResult = 1;
-    exit; // early exit if transaction processed succesfully
-  End;
+  Debug.Send(tender.SerialNumber);
 
-  ShowMessage('Test');
-
-  if tender.AmountOut > 0 then
-  Begin
-    ShowMessage('Making refund:');
-    Debug.Send('Making refund:', tender.AmountIn);
-    makeRefund(tender.AmountOut, saleResult);
-    Result := saleResult = 1;
-    exit;
-  End;
+//  if tender.AmountIn > 0 then
+//  Begin
+//    Debug.Send('Making sale:', tender.AmountIn);
+//    makeSale(tender.AmountIn, saleResult);
+//    Result := saleResult = 1;
+//    Debug.Send('Result:', Result);
+//    exit; // early exit if transaction processed succesfully
+//  End;
+//
+//  if tender.AmountOut > 0 then
+//  Begin
+//    Debug.Send('Making refund:', tender.AmountOut);
+//    makeRefund(tender.AmountOut, saleResult);
+//    Result := saleResult = 1;
+//    Debug.Send('Result:', Result);
+//    exit;
+//  End;
 
 end;
 
@@ -150,8 +142,6 @@ var
   tenderID : Integer;
 begin
 
-  Result := False;
-
   recordSet := SQLSelect('SELECT ID FROM Tender WHERE Code = ''' + tender_code + ''';');
 
   if recordSet.RecordCount = 0 then
@@ -159,6 +149,8 @@ begin
     Result := False;
     exit;
   End;
+
+  Result := True;
 
   tenderID := recordSet.ByName('ID');
 
@@ -177,8 +169,6 @@ var
   full_run_path  : string;
   cents_amount   : Integer;
 begin
-
-  clover_cmd_path := 'D:\Dropbox\dev\clover_rms\Clover\CloverCMD\bin\Debug\CloverCMD.exe';
   clover_cmd_path := 'C:\CloverCMD\CloverCMD.exe';
 
   if not FileExists(clover_cmd_path) then
@@ -188,12 +178,11 @@ begin
     exit;
   End;
 
-  cents_amount := Trunc(amount * 100);
+  cents_amount := Round(amount * 100);
 
   full_run_path := Format('%s %d', [clover_cmd_path, cents_amount]);
 
   saleResult := WinExecAndWait32(full_run_path, SW_SHOW);
-
 end;
 
 end.

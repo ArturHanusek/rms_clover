@@ -76,6 +76,12 @@ namespace CloverRMS
                 return;
             }
 
+            if (args.Length == 2)
+            {
+                SetStatus("Transaction GUID is not specified");
+                return;
+            }
+
             if (Int32.TryParse(args[1], out int amount) == false)
             {
                 SetStatus("Incorrect tender value. Expecting amount in cents");
@@ -85,6 +91,7 @@ namespace CloverRMS
             this.centAmount = amount;
 
             Clover.SetAmount(amount);
+            Clover.SetTransactionGuid(args[2]);
 
             this.labelTotal.Text = string.Format("{0:#.00}", Convert.ToDouble(amount) / 100);
 
@@ -274,6 +281,11 @@ namespace CloverRMS
         }
 
         private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblBuildDate_Click(object sender, EventArgs e)
         {
 
         }
