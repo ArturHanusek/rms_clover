@@ -34,12 +34,14 @@ namespace CloverRMS
         public Clover SetAmount(int amount)
         {
             this._amount = amount;
+            this.Log("Transaction Amount: " + this._amount);
             return this;
         }
 
         public Clover SetTransactionGuid(string guid)
         {
             this._guid = guid;
+            this.Log("Transaction GUID: " + this._guid);
             return this;
         }
 

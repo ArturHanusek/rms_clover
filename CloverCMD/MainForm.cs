@@ -11,6 +11,7 @@ using com.clover.remotepay.sdk;
 using com.clover.remotepay.transport;
 using com.clover.sdk.v3.payments;
 using System.Threading;
+using System.IO;
 
 namespace CloverRMS
 {
@@ -23,12 +24,34 @@ namespace CloverRMS
 
         private bool isInitialized = false;
         private int centAmount = 0;
+        private StreamWriter logFile;
+        private string filename;
 
+        public void Log(String Text)
+        {
+            uiThread.Send(delegate (object state) {
+                this.textBoxLog.Text = (Text + Environment.NewLine + this.textBoxLog.Text);
+                this.writeToFile(Text);
+            }, null);
+        }
 
+        public void writeToFile(string logMessage)
+        {
+            string formattedMessage = $"{System.Environment.NewLine}{DateTime.Now.ToLongTimeString()} {logMessage}";
 
+            this.logFile.Write(formattedMessage);
+        }
 
         public MainForm()
         {
+            uiThread = SynchronizationContext.Current;
+
+            this.filename = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\Your IT Solutions\\Your IT - Clover Integration\\Logs\\{DateTime.Now.ToString("yyyy_MM_dd")}_CloverCMD.log";
+            
+            this.logFile = new StreamWriter(this.filename, true);
+            this.logFile.AutoFlush = true;
+            this.writeToFile("");
+
             if (Clover == null)
             {
                 try
@@ -40,7 +63,6 @@ namespace CloverRMS
                     throw new NotImplementedException();
                 }
             }
-            uiThread = SynchronizationContext.Current;
 
             InitializeComponent();
         }
@@ -53,9 +75,9 @@ namespace CloverRMS
             #if DEBUG
             textBoxLog.Visible  = true;
             #else
-                Console.WriteLine("Mode=Release"); 
-            #endif
-
+                Console.WriteLine("Mode=Release");
+#endif
+            
             this.GetAmount();
         }
 
@@ -63,8 +85,6 @@ namespace CloverRMS
         {
             Clover.AppShutdown();
         }
-
-
 
         private void GetAmount()
         {
@@ -115,12 +135,6 @@ namespace CloverRMS
 
         }
 
-        public void Log(String Text)
-        {
-            uiThread.Send(delegate (object state) {
-                this.textBoxLog.Text = (Text + Environment.NewLine + this.textBoxLog.Text);
-            }, null);
-        }
 
         public void SetStatus(String Text)
         {
@@ -217,6 +231,8 @@ namespace CloverRMS
 
         private void ButtonCancel_Click(object sender, EventArgs e)
         {
+            this.Log("'Cancel' button pressed");
+
             if (this.isInitialized)
             {
                 if (Clover.IsDeviceConnected())
@@ -270,7 +286,8 @@ namespace CloverRMS
         }
 
         private void ButtonManualCard_Click(object sender, EventArgs e)
-        { 
+        {
+            this.Log("'Manual Card Entry' button presses");
             Clover.DoOnSaleResponse = ProcessManualCardEntryTransaction;
 
             Clover.DoOnManualRefundResponse = ProcessManualCardEntryRefund;
