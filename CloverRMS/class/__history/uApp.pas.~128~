@@ -7,8 +7,8 @@ uses uRMSSession, uRMS_SO, Classes;
 type
   TApp = class(TRMS_Session)
   private
-    procedure makeSale(amount: double; var saleResult: Integer);
-    procedure makeRefund(amount: double; var saleResult: Integer);
+    procedure makeSale(amount: double; var saleResult: Integer; transactionGuid: WideString);
+    procedure makeRefund(amount: double; var saleResult: Integer; transactionGuid: WideString);
 
     function findTenderByCode(tender_code: string; var tender: TRMSTender): Boolean;
 
@@ -87,30 +87,24 @@ procedure TApp.DoOnTenderEnd(var Result: WordBool);
 var
   tender    : TRMSTender;
   saleResult: Integer;
+  guid : TGuid;
 begin
 
-  ShowMessage('Test');
   Result := False;
 
   if not findTenderByCode('CLOVER', tender) then
-  Begin
-    ShowMessage('Tender with code CLOVER not found');
+  Begin;
     Debug.Send('Tender with code CLOVER not found');
     Result := True;
     exit;
   End;
 
-  ShowMessage('Test');
-
   if (tender.amount = 0) then
   Begin
-    ShowMessage('Tender amount is 0, exiting');
     Debug.Send('Tender amount is 0, exiting');
     Result := True;
     exit;
   End;
-
-  ShowMessage('Test');
 
   if tender.AmountOut > Abs(Transaction.Total) then
   Begin
@@ -120,25 +114,29 @@ begin
     exit;
   End;
 
-  ShowMessage('Test');
+  if(tender.SerialNumber = '') then
+  Begin
+    CreateGUID(guid);
+    tender.SerialNumber := GuidToString(guid);
+  End;
+
+  Debug.Send('Tender GUID:', tender.SerialNumber);
 
   if tender.AmountIn > 0 then
   Begin
-    ShowMessage('Making sale:');
     Debug.Send('Making sale:', tender.AmountIn);
-    makeSale(tender.AmountIn, saleResult);
+    makeSale(tender.AmountIn, saleResult, tender.SerialNumber);
     Result := saleResult = 1;
+    Debug.Send('Result:', Result);
     exit; // early exit if transaction processed succesfully
   End;
 
-  ShowMessage('Test');
-
   if tender.AmountOut > 0 then
   Begin
-    ShowMessage('Making refund:');
-    Debug.Send('Making refund:', tender.AmountIn);
-    makeRefund(tender.AmountOut, saleResult);
+    Debug.Send('Making refund:', tender.AmountOut);
+    makeRefund(tender.AmountOut, saleResult, tender.SerialNumber);
     Result := saleResult = 1;
+    Debug.Send('Result:', Result);
     exit;
   End;
 
@@ -150,8 +148,6 @@ var
   tenderID : Integer;
 begin
 
-  Result := False;
-
   recordSet := SQLSelect('SELECT ID FROM Tender WHERE Code = ''' + tender_code + ''';');
 
   if recordSet.RecordCount = 0 then
@@ -161,25 +157,24 @@ begin
   End;
 
   Result := True;
+
   tenderID := recordSet.ByName('ID');
 
   tender := Transaction.Tenders.Find(tenderID);
 
 end;
 
-procedure TApp.makeRefund(amount: double; var saleResult: Integer);
+procedure TApp.makeRefund(amount: double; var saleResult: Integer; transactionGuid: WideString);
 begin
-  makeSale(-1 * amount, saleResult);
+  makeSale(-1 * amount, saleResult, transactionGuid);
 end;
 
-procedure TApp.makeSale(amount: double; var saleResult: Integer);
+procedure TApp.makeSale(amount: double; var saleResult: Integer; transactionGuid: WideString);
 var
   clover_cmd_path: string;
   full_run_path  : string;
   cents_amount   : Integer;
 begin
-
-  clover_cmd_path := 'D:\Dropbox\dev\clover_rms\Clover\CloverCMD\bin\Debug\CloverCMD.exe';
   clover_cmd_path := 'C:\CloverCMD\CloverCMD.exe';
 
   if not FileExists(clover_cmd_path) then
@@ -189,12 +184,11 @@ begin
     exit;
   End;
 
-  cents_amount := Trunc(amount * 100);
+  cents_amount := Round(amount * 100);
 
-  full_run_path := Format('%s %d', [clover_cmd_path, cents_amount]);
+  full_run_path := Format('%s %d %s', [clover_cmd_path, cents_amount, transactionGuid]);
 
   saleResult := WinExecAndWait32(full_run_path, SW_SHOW);
-
 end;
 
 end.

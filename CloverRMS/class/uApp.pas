@@ -118,9 +118,12 @@ begin
   Begin
     CreateGUID(guid);
     tender.SerialNumber := GuidToString(guid);
+    tender.SerialNumber := stringreplace(tender.SerialNumber,'-','',[rfReplaceAll]);
+    tender.SerialNumber := stringreplace(tender.SerialNumber,'{','',[rfReplaceAll]);
+    tender.SerialNumber := stringreplace(tender.SerialNumber,'}','',[rfReplaceAll]);
   End;
 
-  Debug.Send('Tender GUID:', tender.SerialNumber);
+  Debug.Send('Transaction GUID:', tender.SerialNumber);
 
   if tender.AmountIn > 0 then
   Begin
