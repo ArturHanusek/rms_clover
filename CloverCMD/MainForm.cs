@@ -92,19 +92,12 @@ namespace CloverRMS
             this.Log("Build 2021/11/03");
             this.Log("Clover SDK: 4.0.5");
 
-            Clover = new Clover(this)
-            {
-                DoOnSaleResponse = OnSaleResponseMethod,
-                DoOnManualRefundResponse = OnManualRefundResponseMethod
-            };
-
             InputOption[] empty = { };
 
             AddCloverButtons(empty);
 
             OnRetrieveDeviceStatusResponse_IDLE = ProcessTrasactionWhenIDLE;
-
-            LoadTransactionAmount();
+            autoConnectCloverTimer.Enabled = true;
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -534,6 +527,19 @@ namespace CloverRMS
         private void timerTimeLableUpdate_Tick(object sender, EventArgs e)
         {
 
+        }
+
+        private void autoConnectCloverTimer_Tick(object sender, EventArgs e)
+        {
+            autoConnectCloverTimer.Enabled = false;
+
+            Clover = new Clover(this)
+            {
+                DoOnSaleResponse = OnSaleResponseMethod,
+                DoOnManualRefundResponse = OnManualRefundResponseMethod
+            };
+
+            LoadTransactionAmount();
         }
     }
 }

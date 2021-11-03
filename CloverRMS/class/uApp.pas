@@ -84,7 +84,6 @@ begin
   End;
 
   OnTenderEnd := DoOnTenderEnd;
-
 end;
 
 procedure TApp.DoOnTenderEnd(var Result: WordBool);
@@ -92,6 +91,7 @@ var
   tender    : TRMSTender;
   saleResult: Integer;
   guid : TGuid;
+  receiptText: string;
 begin
 
   Result := False;
@@ -151,8 +151,14 @@ begin
     exit;
   End;
 
-  SetVariable(1, TFile.ReadAllText(receiptFileName));
+  receiptText := TFile.ReadAllText(receiptFileName);
+
+  tender.SerialNumber := receiptText;
+  Debug.Send('Tender.SerialNumber', tender.SerialNumber);
+
+  Debug.Send('Deleting file', receiptFileName);
   DeleteFile(receiptFileName);
+  Debug.Send('Deleted');
 
 end;
 

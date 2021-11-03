@@ -84,7 +84,6 @@ begin
   End;
 
   OnTenderEnd := DoOnTenderEnd;
-
 end;
 
 procedure TApp.DoOnTenderEnd(var Result: WordBool);
@@ -92,6 +91,7 @@ var
   tender    : TRMSTender;
   saleResult: Integer;
   guid : TGuid;
+  receiptText: string;
 begin
 
   Result := False;
@@ -133,28 +133,30 @@ begin
   Begin
     Debug.Send('Making sale:', tender.AmountIn);
     makeSale(tender.AmountIn, saleResult, tender.SerialNumber);
-
     Result := saleResult = 1;
+  End
 
-    if Result AND (FileExists(receiptFileName)) then
-    Begin
-      SetVariable(1, TFile.ReadAllText(receiptFileName));
-    End else Begin
-      Debug.Send('File "'+receiptFileName+'" does not exist');
-    End;
-
-    Debug.Send('Result:', Result);
-    exit; // early exit if transaction processed succesfully
-  End;
-
-  if tender.AmountOut > 0 then
+  else if tender.AmountOut > 0 then
   Begin
     Debug.Send('Making refund:', tender.AmountOut);
     makeRefund(tender.AmountOut, saleResult, tender.SerialNumber);
     Result := saleResult = 1;
-    Debug.Send('Result:', Result);
+  End;
+
+  Debug.Send('Result:', Result);
+
+  if not FileExists(receiptFileName) then
+  Begin
+    Debug.Send('File "'+receiptFileName+'" does not exist');
     exit;
   End;
+
+  receiptText = TFile.ReadAllText(receiptFileName);
+  Debug.Send('Receipt', receiptText);
+  tender.SerialNumber := receiptText;
+  tender.ApprovalCode := receiptText;
+  SetVariable(2, receiptText);
+  DeleteFile(receiptFileName);
 
 end;
 

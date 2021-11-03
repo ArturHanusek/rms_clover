@@ -33,33 +33,34 @@ namespace CloverRMS
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.panelCenterWindow = new System.Windows.Forms.Panel();
+            this.cloverStatusPanel = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.labelStatus = new System.Windows.Forms.Label();
+            this.labelTotal = new System.Windows.Forms.Label();
             this.CloverButtonsPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.labelTotal = new System.Windows.Forms.Label();
             this.setConnectingLabelStatusTimer = new System.Windows.Forms.Timer(this.components);
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panelButtonsRight = new System.Windows.Forms.Panel();
+            this.CloverDeviceSerialNumberLabel = new System.Windows.Forms.Label();
+            this.MerchantIdLabel = new System.Windows.Forms.Label();
+            this.ManualCardEntryButton = new System.Windows.Forms.Button();
+            this.showHideLogsButton = new System.Windows.Forms.Button();
             this.RetrievePaymentButton = new System.Windows.Forms.Button();
             this.ResetDeviceButton = new System.Windows.Forms.Button();
             this.ConnectCloverButton = new System.Windows.Forms.Button();
             this.CloseWindowButton = new System.Windows.Forms.Button();
             this.menuButton = new System.Windows.Forms.Button();
             this.textBoxLog = new System.Windows.Forms.TextBox();
-            this.showHideLogsButton = new System.Windows.Forms.Button();
-            this.ManualCardEntryButton = new System.Windows.Forms.Button();
-            this.MerchantIdLabel = new System.Windows.Forms.Label();
-            this.CloverDeviceSerialNumberLabel = new System.Windows.Forms.Label();
-            this.cloverStatusPanel = new System.Windows.Forms.Panel();
-            this.labelStatus = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.autoConnectCloverTimer = new System.Windows.Forms.Timer(this.components);
             this.panelCenterWindow.SuspendLayout();
+            this.cloverStatusPanel.SuspendLayout();
             this.CloverButtonsPanel.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panelButtonsRight.SuspendLayout();
-            this.cloverStatusPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelCenterWindow
@@ -71,6 +72,62 @@ namespace CloverRMS
             this.panelCenterWindow.Name = "panelCenterWindow";
             this.panelCenterWindow.Size = new System.Drawing.Size(616, 265);
             this.panelCenterWindow.TabIndex = 10;
+            // 
+            // cloverStatusPanel
+            // 
+            this.cloverStatusPanel.BackColor = System.Drawing.Color.White;
+            this.cloverStatusPanel.Controls.Add(this.label1);
+            this.cloverStatusPanel.Controls.Add(this.labelStatus);
+            this.cloverStatusPanel.Controls.Add(this.labelTotal);
+            this.cloverStatusPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cloverStatusPanel.Location = new System.Drawing.Point(0, 0);
+            this.cloverStatusPanel.Name = "cloverStatusPanel";
+            this.cloverStatusPanel.Size = new System.Drawing.Size(466, 265);
+            this.cloverStatusPanel.TabIndex = 25;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.label1.Font = new System.Drawing.Font("Arial", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(10, 196);
+            this.label1.Margin = new System.Windows.Forms.Padding(10);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(271, 47);
+            this.label1.TabIndex = 19;
+            this.label1.Text = "REFUND";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // labelStatus
+            // 
+            this.labelStatus.BackColor = System.Drawing.Color.White;
+            this.labelStatus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelStatus.ForeColor = System.Drawing.Color.Black;
+            this.labelStatus.Location = new System.Drawing.Point(12, 7);
+            this.labelStatus.Margin = new System.Windows.Forms.Padding(15);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Padding = new System.Windows.Forms.Padding(10);
+            this.labelStatus.Size = new System.Drawing.Size(436, 183);
+            this.labelStatus.TabIndex = 18;
+            this.labelStatus.Text = "Customer is selecting payment...";
+            // 
+            // labelTotal
+            // 
+            this.labelTotal.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.labelTotal.BackColor = System.Drawing.Color.White;
+            this.labelTotal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.labelTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTotal.ForeColor = System.Drawing.Color.Black;
+            this.labelTotal.Location = new System.Drawing.Point(287, 196);
+            this.labelTotal.Margin = new System.Windows.Forms.Padding(10);
+            this.labelTotal.Name = "labelTotal";
+            this.labelTotal.Size = new System.Drawing.Size(161, 47);
+            this.labelTotal.TabIndex = 15;
+            this.labelTotal.Text = "17.54";
+            this.labelTotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // CloverButtonsPanel
             // 
@@ -122,21 +179,6 @@ namespace CloverRMS
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Visible = false;
             // 
-            // labelTotal
-            // 
-            this.labelTotal.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.labelTotal.BackColor = System.Drawing.Color.White;
-            this.labelTotal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.labelTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTotal.ForeColor = System.Drawing.Color.Black;
-            this.labelTotal.Location = new System.Drawing.Point(287, 196);
-            this.labelTotal.Margin = new System.Windows.Forms.Padding(10);
-            this.labelTotal.Name = "labelTotal";
-            this.labelTotal.Size = new System.Drawing.Size(161, 47);
-            this.labelTotal.TabIndex = 15;
-            this.labelTotal.Text = "17.54";
-            this.labelTotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // setConnectingLabelStatusTimer
             // 
             this.setConnectingLabelStatusTimer.Enabled = true;
@@ -178,6 +220,53 @@ namespace CloverRMS
             this.panelButtonsRight.Size = new System.Drawing.Size(155, 634);
             this.panelButtonsRight.TabIndex = 27;
             this.panelButtonsRight.Visible = false;
+            // 
+            // CloverDeviceSerialNumberLabel
+            // 
+            this.CloverDeviceSerialNumberLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.CloverDeviceSerialNumberLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CloverDeviceSerialNumberLabel.ForeColor = System.Drawing.Color.White;
+            this.CloverDeviceSerialNumberLabel.Location = new System.Drawing.Point(0, 579);
+            this.CloverDeviceSerialNumberLabel.Name = "CloverDeviceSerialNumberLabel";
+            this.CloverDeviceSerialNumberLabel.Size = new System.Drawing.Size(155, 25);
+            this.CloverDeviceSerialNumberLabel.TabIndex = 41;
+            this.CloverDeviceSerialNumberLabel.Text = "S/N: QC223612216333";
+            this.CloverDeviceSerialNumberLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // MerchantIdLabel
+            // 
+            this.MerchantIdLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MerchantIdLabel.ForeColor = System.Drawing.Color.White;
+            this.MerchantIdLabel.Location = new System.Drawing.Point(3, 3);
+            this.MerchantIdLabel.Name = "MerchantIdLabel";
+            this.MerchantIdLabel.Size = new System.Drawing.Size(172, 25);
+            this.MerchantIdLabel.TabIndex = 40;
+            this.MerchantIdLabel.Text = "MID: 928388321";
+            this.MerchantIdLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // ManualCardEntryButton
+            // 
+            this.ManualCardEntryButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ManualCardEntryButton.ForeColor = System.Drawing.Color.White;
+            this.ManualCardEntryButton.Location = new System.Drawing.Point(3, 79);
+            this.ManualCardEntryButton.Name = "ManualCardEntryButton";
+            this.ManualCardEntryButton.Size = new System.Drawing.Size(149, 30);
+            this.ManualCardEntryButton.TabIndex = 38;
+            this.ManualCardEntryButton.Text = "Manual Card Entry";
+            this.ManualCardEntryButton.UseVisualStyleBackColor = true;
+            this.ManualCardEntryButton.Click += new System.EventHandler(this.manualCardEntryButton_Click);
+            // 
+            // showHideLogsButton
+            // 
+            this.showHideLogsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.showHideLogsButton.ForeColor = System.Drawing.Color.White;
+            this.showHideLogsButton.Location = new System.Drawing.Point(0, 301);
+            this.showHideLogsButton.Name = "showHideLogsButton";
+            this.showHideLogsButton.Size = new System.Drawing.Size(152, 30);
+            this.showHideLogsButton.TabIndex = 36;
+            this.showHideLogsButton.Text = "Live Logs";
+            this.showHideLogsButton.UseVisualStyleBackColor = true;
+            this.showHideLogsButton.Click += new System.EventHandler(this.showHideLogsButton_Click);
             // 
             // RetrievePaymentButton
             // 
@@ -260,93 +349,9 @@ namespace CloverRMS
             this.textBoxLog.WordWrap = false;
             this.textBoxLog.TextChanged += new System.EventHandler(this.textBoxLog_TextChanged);
             // 
-            // showHideLogsButton
+            // autoConnectCloverTimer
             // 
-            this.showHideLogsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.showHideLogsButton.ForeColor = System.Drawing.Color.White;
-            this.showHideLogsButton.Location = new System.Drawing.Point(0, 301);
-            this.showHideLogsButton.Name = "showHideLogsButton";
-            this.showHideLogsButton.Size = new System.Drawing.Size(152, 30);
-            this.showHideLogsButton.TabIndex = 36;
-            this.showHideLogsButton.Text = "Live Logs";
-            this.showHideLogsButton.UseVisualStyleBackColor = true;
-            this.showHideLogsButton.Click += new System.EventHandler(this.showHideLogsButton_Click);
-            // 
-            // ManualCardEntryButton
-            // 
-            this.ManualCardEntryButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ManualCardEntryButton.ForeColor = System.Drawing.Color.White;
-            this.ManualCardEntryButton.Location = new System.Drawing.Point(3, 79);
-            this.ManualCardEntryButton.Name = "ManualCardEntryButton";
-            this.ManualCardEntryButton.Size = new System.Drawing.Size(149, 30);
-            this.ManualCardEntryButton.TabIndex = 38;
-            this.ManualCardEntryButton.Text = "Manual Card Entry";
-            this.ManualCardEntryButton.UseVisualStyleBackColor = true;
-            this.ManualCardEntryButton.Click += new System.EventHandler(this.manualCardEntryButton_Click);
-            // 
-            // MerchantIdLabel
-            // 
-            this.MerchantIdLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MerchantIdLabel.ForeColor = System.Drawing.Color.White;
-            this.MerchantIdLabel.Location = new System.Drawing.Point(3, 3);
-            this.MerchantIdLabel.Name = "MerchantIdLabel";
-            this.MerchantIdLabel.Size = new System.Drawing.Size(172, 25);
-            this.MerchantIdLabel.TabIndex = 40;
-            this.MerchantIdLabel.Text = "MID: 928388321";
-            this.MerchantIdLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // CloverDeviceSerialNumberLabel
-            // 
-            this.CloverDeviceSerialNumberLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.CloverDeviceSerialNumberLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CloverDeviceSerialNumberLabel.ForeColor = System.Drawing.Color.White;
-            this.CloverDeviceSerialNumberLabel.Location = new System.Drawing.Point(0, 579);
-            this.CloverDeviceSerialNumberLabel.Name = "CloverDeviceSerialNumberLabel";
-            this.CloverDeviceSerialNumberLabel.Size = new System.Drawing.Size(155, 25);
-            this.CloverDeviceSerialNumberLabel.TabIndex = 41;
-            this.CloverDeviceSerialNumberLabel.Text = "S/N: QC223612216333";
-            this.CloverDeviceSerialNumberLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // cloverStatusPanel
-            // 
-            this.cloverStatusPanel.BackColor = System.Drawing.Color.White;
-            this.cloverStatusPanel.Controls.Add(this.label1);
-            this.cloverStatusPanel.Controls.Add(this.labelStatus);
-            this.cloverStatusPanel.Controls.Add(this.labelTotal);
-            this.cloverStatusPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cloverStatusPanel.Location = new System.Drawing.Point(0, 0);
-            this.cloverStatusPanel.Name = "cloverStatusPanel";
-            this.cloverStatusPanel.Size = new System.Drawing.Size(466, 265);
-            this.cloverStatusPanel.TabIndex = 25;
-            // 
-            // labelStatus
-            // 
-            this.labelStatus.BackColor = System.Drawing.Color.White;
-            this.labelStatus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelStatus.ForeColor = System.Drawing.Color.Black;
-            this.labelStatus.Location = new System.Drawing.Point(12, 7);
-            this.labelStatus.Margin = new System.Windows.Forms.Padding(15);
-            this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Padding = new System.Windows.Forms.Padding(10);
-            this.labelStatus.Size = new System.Drawing.Size(436, 183);
-            this.labelStatus.TabIndex = 18;
-            this.labelStatus.Text = "Customer is selecting payment...";
-            // 
-            // label1
-            // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label1.Font = new System.Drawing.Font("Arial", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(10, 196);
-            this.label1.Margin = new System.Windows.Forms.Padding(10);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(271, 47);
-            this.label1.TabIndex = 19;
-            this.label1.Text = "REFUND";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.autoConnectCloverTimer.Tick += new System.EventHandler(this.autoConnectCloverTimer_Tick);
             // 
             // MainForm
             // 
@@ -370,10 +375,10 @@ namespace CloverRMS
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.panelCenterWindow.ResumeLayout(false);
+            this.cloverStatusPanel.ResumeLayout(false);
             this.CloverButtonsPanel.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panelButtonsRight.ResumeLayout(false);
-            this.cloverStatusPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -404,6 +409,7 @@ namespace CloverRMS
         private System.Windows.Forms.Panel cloverStatusPanel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label labelStatus;
+        private System.Windows.Forms.Timer autoConnectCloverTimer;
     }
 }
 
