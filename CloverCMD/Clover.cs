@@ -10,13 +10,13 @@ namespace CloverRMS
     {
         readonly MainForm Form;
 
-        ICloverConnector cloverConnector;
+        private ICloverConnector cloverConnector;
 
 
-        private int _amount = 0;
-        private string _guid = "";
+        public int _amount = 0;
+        public string _guid = "";
 
-        bool Connected = false;
+        public bool IsReady = false;
 
 
         public delegate void DoOnSaleResponseMethod(SaleResponse response);
@@ -30,6 +30,17 @@ namespace CloverRMS
         public DoOnManualRefundResponseMethod DoOnManualRefundResponse;
 
 
+
+        public Clover(MainForm ParentForm)
+        {
+            Form = ParentForm;
+            var usbConfiguration = new USBCloverDeviceConfiguration("CE0EE6PJ57C70.6MQBCNVGGSBEW", false);
+            cloverConnector = CloverConnectorFactory.createICloverConnector(usbConfiguration);
+            cloverConnector.InitializeConnection();
+
+            cloverConnector.AddCloverConnectorListener(this);
+            cloverConnector.AddCloverConnectorListener(Form);
+        }
 
         public Clover SetAmount(int amount)
         {
@@ -47,7 +58,7 @@ namespace CloverRMS
 
         public bool IsDeviceConnected()
         {
-            return this.Connected;
+            return this.IsReady;
         } 
 
         public void Log(String msg)
@@ -55,51 +66,18 @@ namespace CloverRMS
             Form.Log(msg);
         }
 
-        public Clover(MainForm ParentForm)
-        {
-            Form = ParentForm;
-        }
-
-        public ICloverConnector CloverConnector
-        {
-            get
-            {
-                return this.cloverConnector;
-            }
-            set
-            {
-                this.cloverConnector = value;
-            }
-        }
-
-        public void InitializeConnector()
-        {
-            var usbConfiguration = new USBCloverDeviceConfiguration("CE0EE6PJ57C70.6MQBCNVGGSBEW", false);
-            
-            if (cloverConnector != null) 
-            {
-
-                cloverConnector.RemoveCloverConnectorListener(this);
-                OnDeviceDisconnected(); // for any disabling, messaging, etc.
-                cloverConnector.Dispose();
-
-            }
-
-            cloverConnector = CloverConnectorFactory.createICloverConnector(usbConfiguration);
-            cloverConnector.AddCloverConnectorListener(this);
-            cloverConnector.InitializeConnection();
-        }
+        public ICloverConnector CloverConnector { get { return this.cloverConnector; }}
 
         public void Dispose()
         {
+            Log("Clover." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
+
             if (cloverConnector != null)
             {
                 try
                 {
-                    cloverConnector.ShowWelcomeScreen();
-                    cloverConnector.RemoveCloverConnectorListener(this);
-                    cloverConnector.ResetDevice();
-                    OnDeviceDisconnected();
+                    CloverConnector.RemoveCloverConnectorListener(Form);
+                    CloverConnector.RemoveCloverConnectorListener(this);
                     cloverConnector.Dispose();
                 }
                 catch (Exception)
@@ -109,7 +87,7 @@ namespace CloverRMS
             }
         }
 
-        public void ProcessTransaction(bool isManualCardEntry)
+        public void ProcessTransaction(bool isManualCardEntry = false)
         {
             this.Log("ProcessTransaction(" + this._amount.ToString() + ")");
             if (this._amount > 0)
@@ -131,15 +109,13 @@ namespace CloverRMS
 
         private void Charge(int Amount, bool isManualCardEntry)
         {
-            if (this._guid == "")
-            {
-                this._guid = ExternalIDUtil.GenerateRandomString(32);
-            }
-
             SaleRequest request = new SaleRequest()
             {
                 ExternalId = this._guid,
-                Amount = Amount
+                Amount = Amount,
+                DisableCashback = true,
+                DisableDuplicateChecking = true,
+                DisableReceiptSelection = true,
             };
 
             if (isManualCardEntry)
@@ -147,23 +123,18 @@ namespace CloverRMS
                 request.CardEntryMethods = (com.clover.remotepay.sdk.CloverConnector.CARD_ENTRY_METHOD_MANUAL);
                 request.CardNotPresent = true;
             }
-
-            request.DisableCashback = true;
             
             cloverConnector.Sale(request);
         }
 
         private void Refund(int Amount, bool isManualCardEntry)
         {
-            if (this._guid == "")
-            {
-                this._guid = ExternalIDUtil.GenerateRandomString(32);
-            }
-
             ManualRefundRequest request = new ManualRefundRequest()
             {
                 ExternalId = this._guid,
-                Amount = -Amount
+                Amount = -Amount,
+                DisableDuplicateChecking = true,
+                DisableReceiptSelection = true,
             };
 
             if (isManualCardEntry)
@@ -172,14 +143,13 @@ namespace CloverRMS
                 request.CardNotPresent = true;
             }
 
-
             cloverConnector.ManualRefund(request);
         }
 
 
-        public void CancelTransaction()
+        public void InvokeESC()
         {
-            this.Log("CancelTransaction()");
+            this.Log("InvokeESC()");
 
             InputOption PressEsc;
             PressEsc = new InputOption()
@@ -190,300 +160,238 @@ namespace CloverRMS
             CloverConnector.InvokeInputOption(PressEsc);
         }
 
-        public void AppShutdown()
+        public void SendRetrievePaymentRequest()
         {
-            if (cloverConnector != null)
+            Log("Clover." + System.Reflection.MethodBase.GetCurrentMethod().Name + "(\"" + _guid + "\")");
+
+            CloverConnector.RetrievePayment(new RetrievePaymentRequest() {
+                externalPaymentId = _guid
+            });
+        }
+
+        public void ResetDevice()
+        {
+            CloverConnector.ResetDevice();
+        }
+
+        internal void simulateClick(com.clover.remotepay.transport.KeyPress key)
+        {
+            InputOption io = new InputOption()
             {
-                try
-                {
-                    cloverConnector.RemoveCloverConnectorListener(this);
-                    cloverConnector.ResetDevice();
-                    OnDeviceDisconnected();
-                    cloverConnector.Dispose();
-                }
-                catch (Exception)
-                {
-                    cloverConnector = null;
-                }
-            }
+                keyPress = key
+            };
+
+            CloverConnector.InvokeInputOption(io);
         }
 
-        public void OnConfirmPaymentRequest(ConfirmPaymentRequest request)
+        internal void Connect()
         {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-
-            foreach (Challenge challenge in request.Challenges)
-            {
-                Form.uiThread.Send(delegate (object state) {
-
-                    this.Log(request.Challenges[0].message);
-
-                    var dialogResult = MessageBox.Show(Form, request.Challenges[0].message, "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-
-                    this.Log(dialogResult.ToString());
-
-                    if (dialogResult == DialogResult.No)
-                    {
-                        cloverConnector.RejectPayment(request.Payment, challenge);
-                    }
-
-                }, null);
-            }
-
-            cloverConnector.AcceptPayment(request.Payment);
+            CloverConnector.InitializeConnection();
         }
 
-        public void OnDeviceConnected()
+        internal void RetrieveDeviceStatus()
         {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            Form.SetConnectedStatusLabelText("Connecting...");
-        }
-
-        public void OnDeviceDisconnected()
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            Form.SetConnectedStatusLabelText("Disconnected");
-            Connected = false;
-        }
-
-        public void OnDeviceError(CloverDeviceErrorEvent deviceErrorEvent)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name+
-                ": "+
-                deviceErrorEvent.Message+
-                "(Code: "+
-                deviceErrorEvent.ToString()+
-                ")"
-                );
-
-            Form.ShowErrorAndExit("Device Error", deviceErrorEvent.Message, Convert.ToInt32(deviceErrorEvent.Code));
-        }
-
-        public void OnDeviceReady(MerchantInfo merchantInfo)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-
-            Form.SetConnectedStatusLabelText("Ready! " + merchantInfo.merchantName + "(" + merchantInfo.Device.Serial + ") " + "MID: " + merchantInfo.merchantMId.ToString());
-            
-            Connected = true;
-        }
-
-        public void OnSaleResponse(SaleResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name +
-                ": " +
-                " Message: "+response.Message +
-                " Result: " +response.Result.ToString()
-               );
-
-            DoOnSaleResponse(response);
-        }
-
-        public void OnManualRefundResponse(ManualRefundResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name +
-                ": " +
-                " Message: " + response.Message +
-                " Result: " + response.Result.ToString()
-               );
-
-            DoOnManualRefundResponse(response);
-        }
-
-        public void OnVerifySignatureRequest(VerifySignatureRequest request)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-
-            Form.uiThread.Send(delegate (object state) {
-                this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-
-                var dialogResult = MessageBox.Show(Form, "Is signature correct?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-                this.Log(dialogResult.ToString());
-
-                if (dialogResult == DialogResult.Yes)
-                {
-                    request.Accept();
-                }
-                else
-                {
-                    request.Reject();
-                }
-
-            }, null);
-        }
-
-        public void OnAuthResponse(AuthResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnCapturePreAuthResponse(CapturePreAuthResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnCloseoutResponse(CloseoutResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnCustomActivityResponse(CustomActivityResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnDeviceActivityEnd(CloverDeviceEvent deviceEvent)
-        {
-            //this.log(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            cloverConnector.RetrieveDeviceStatus(new RetrieveDeviceStatusRequest(true));
         }
 
         public void OnDeviceActivityStart(CloverDeviceEvent deviceEvent)
         {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name +
-                " Message: "+deviceEvent.Message+
-                " Code: "+deviceEvent.Code.ToString()
-                );
-            Form.SetStatus(deviceEvent.Message);
+            
         }
 
-        public void OnMessageFromActivity(MessageFromActivity response)
+        public void OnDeviceActivityEnd(CloverDeviceEvent deviceEvent)
         {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            
+        }
+
+        public void OnDeviceError(CloverDeviceErrorEvent deviceErrorEvent)
+        {
+            
         }
 
         public void OnPreAuthResponse(PreAuthResponse response)
         {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            
         }
 
-        public void OnPrintJobStatusRequest(PrintJobStatusRequest request)
+        public void OnAuthResponse(AuthResponse response)
         {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnPrintJobStatusResponse(PrintJobStatusResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage printManualRefundDeclineReceiptMessage)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage printManualRefundReceiptMessage)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnPrintPaymentDeclineReceipt(PrintPaymentDeclineReceiptMessage printPaymentDeclineReceiptMessage)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnPrintPaymentMerchantCopyReceipt(PrintPaymentMerchantCopyReceiptMessage printPaymentMerchantCopyReceiptMessage)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnPrintPaymentReceipt(PrintPaymentReceiptMessage printPaymentReceiptMessage)
-        {
-
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage printRefundPaymentReceiptMessage)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnReadCardDataResponse(ReadCardDataResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnRefundPaymentResponse(RefundPaymentResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnResetDeviceResponse(ResetDeviceResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name+
-                ": "+
-                " Message: "+response.Message+
-                " Reason: " + response.Reason+
-                " Result: " + response.Result.ToString()+
-                " State: "   + response.State.ToString()+
-                " Success: " + response.Success.ToString()
-                );
-        }
-
-        public void OnRetrieveDeviceStatusResponse(RetrieveDeviceStatusResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name +
-                "State: " + response.State.ToString());
-        }
-
-        public void OnRetrievePaymentResponse(RetrievePaymentResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnRetrievePendingPaymentsResponse(RetrievePendingPaymentsResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnRetrievePrintersResponse(RetrievePrintersResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnTipAdded(TipAddedMessage message)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            
         }
 
         public void OnTipAdjustAuthResponse(TipAdjustAuthResponse response)
         {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            
         }
 
-        public void OnVaultCardResponse(VaultCardResponse response)
+        public void OnCapturePreAuthResponse(CapturePreAuthResponse response)
         {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnVoidPaymentResponse(VoidPaymentResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnVoidPaymentRefundResponse(VoidPaymentRefundResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnDisplayReceiptOptionsResponse(DisplayReceiptOptionsResponse response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnInvalidStateTransitionResponse(InvalidStateTransitionNotification message)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
-        }
-
-        public void OnCustomerProvidedData(CustomerProvidedDataEvent response)
-        {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            
         }
 
         public void OnIncrementPreAuthResponse(IncrementPreAuthResponse response)
         {
-            this.Log(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            
+        }
+
+        public void OnVerifySignatureRequest(VerifySignatureRequest request)
+        {
+            
+        }
+
+        public void OnConfirmPaymentRequest(ConfirmPaymentRequest request)
+        {
+            
+        }
+
+        public void OnCloseoutResponse(CloseoutResponse response)
+        {
+            
+        }
+
+        public void OnSaleResponse(SaleResponse response)
+        {
+            
+        }
+
+        public void OnManualRefundResponse(ManualRefundResponse response)
+        {
+            
+        }
+
+        public void OnRefundPaymentResponse(RefundPaymentResponse response)
+        {
+            
+        }
+
+        public void OnVoidPaymentRefundResponse(VoidPaymentRefundResponse response)
+        {
+            
+        }
+
+        public void OnTipAdded(TipAddedMessage message)
+        {
+            Log("Clover." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
+        }
+
+        public void OnVoidPaymentResponse(VoidPaymentResponse response)
+        {
+            Log("Clover." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
+        }
+
+        public void OnDeviceConnected()
+        {
+            
+        }
+
+        public void OnDeviceReady(MerchantInfo merchantInfo)
+        {
+            
+        }
+
+        public void OnDeviceDisconnected()
+        {
+            
+        }
+
+        public void OnVaultCardResponse(VaultCardResponse response)
+        {
+            
+        }
+
+        public void OnRetrievePendingPaymentsResponse(RetrievePendingPaymentsResponse response)
+        {
+            
+        }
+
+        public void OnReadCardDataResponse(ReadCardDataResponse response)
+        {
+            
+        }
+
+        public void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage message)
+        {
+            
+        }
+
+        public void OnPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage message)
+        {
+            
+        }
+
+        public void OnPrintPaymentReceipt(PrintPaymentReceiptMessage message)
+        {
+            
+        }
+
+        public void OnPrintPaymentDeclineReceipt(PrintPaymentDeclineReceiptMessage message)
+        {
+            
+        }
+
+        public void OnPrintPaymentMerchantCopyReceipt(PrintPaymentMerchantCopyReceiptMessage message)
+        {
+            
+        }
+
+        public void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage message)
+        {
+            
+        }
+
+        public void OnPrintJobStatusResponse(PrintJobStatusResponse response)
+        {
+            
+        }
+
+        public void OnRetrievePrintersResponse(RetrievePrintersResponse response)
+        {
+            
+        }
+
+        public void OnCustomActivityResponse(CustomActivityResponse response)
+        {
+            
+        }
+
+        public void OnRetrieveDeviceStatusResponse(RetrieveDeviceStatusResponse response)
+        {
+            
+        }
+
+        public void OnMessageFromActivity(MessageFromActivity response)
+        {
+            
+        }
+
+        public void OnResetDeviceResponse(ResetDeviceResponse response)
+        {
+            
+        }
+
+        public void OnRetrievePaymentResponse(RetrievePaymentResponse response)
+        {
+            
+        }
+
+        public void OnPrintJobStatusRequest(PrintJobStatusRequest request)
+        {
+            
+        }
+
+        public void OnDisplayReceiptOptionsResponse(DisplayReceiptOptionsResponse response)
+        {
+            
+        }
+
+        public void OnInvalidStateTransitionResponse(InvalidStateTransitionNotification message)
+        {
+            
+        }
+
+        public void OnCustomerProvidedData(CustomerProvidedDataEvent response)
+        {
+            
         }
     }
 }

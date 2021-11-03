@@ -23,11 +23,15 @@ type
 var
   App: TApp;
 
+const
+  receiptFileName = 'C:\CloverCMD\LastSaleReceipt.txt';
+
+
 implementation
 
 { TApp }
 
-uses uDebuger, Windows, SysUtils, Dialogs;
+uses uDebuger, Windows, SysUtils, Dialogs, IOUtils;
 
 function WinExecAndWait32(FileName: string; Visibility: Integer): Longword;
 var { by Pat Ritchey }
@@ -130,18 +134,25 @@ begin
     Debug.Send('Making sale:', tender.AmountIn);
     makeSale(tender.AmountIn, saleResult, tender.SerialNumber);
     Result := saleResult = 1;
-    Debug.Send('Result:', Result);
-    exit; // early exit if transaction processed succesfully
-  End;
+  End
 
-  if tender.AmountOut > 0 then
+  else if tender.AmountOut > 0 then
   Begin
     Debug.Send('Making refund:', tender.AmountOut);
     makeRefund(tender.AmountOut, saleResult, tender.SerialNumber);
     Result := saleResult = 1;
-    Debug.Send('Result:', Result);
+  End;
+
+  Debug.Send('Result:', Result);
+
+  if not FileExists(receiptFileName) then
+  Begin
+    Debug.Send('File "'+receiptFileName+'" does not exist');
     exit;
   End;
+
+  SetVariable(1, TFile.ReadAllText(receiptFileName));
+  DeleteFile(receiptFileName);
 
 end;
 
