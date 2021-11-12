@@ -102,8 +102,20 @@ namespace CloverRMS
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            try
+            {
+                if (Clover != null)
+                {
+                    Clover.Dispose();
+                }
+            }
+            catch (Exception exception)
+            {
+                Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + ".Exception() " + exception.Message);
+                //throw;
+            }
+
             Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
-            Clover.Dispose();
         }
 
         public void Log(String Text)

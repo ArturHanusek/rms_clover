@@ -289,55 +289,27 @@ namespace CloverRMS
             
         }
 
-        public void OnDeviceDisconnected()
-        {
-            
-        }
+        public void OnDeviceDisconnected() { }
 
         public void OnVaultCardResponse(VaultCardResponse response)
-        {
-            
-        }
+        { }
 
         public void OnRetrievePendingPaymentsResponse(RetrievePendingPaymentsResponse response)
-        {
-            
-        }
+        { }
 
-        public void OnReadCardDataResponse(ReadCardDataResponse response)
-        {
-            
-        }
+        public void OnReadCardDataResponse(ReadCardDataResponse response) { }
 
-        public void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage message)
-        {
-            
-        }
-
-        public void OnPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage message)
-        {
-            
-        }
-
+        public void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage message) { }
+        public void OnPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage message) { }
         public void OnPrintPaymentReceipt(PrintPaymentReceiptMessage message)
-        {
-            
-        }
-
+        { }
         public void OnPrintPaymentDeclineReceipt(PrintPaymentDeclineReceiptMessage message)
-        {
-            
-        }
-
+        { }
         public void OnPrintPaymentMerchantCopyReceipt(PrintPaymentMerchantCopyReceiptMessage message)
-        {
-            
-        }
+        { }
 
         public void OnPrintRefundPaymentReceipt(PrintRefundPaymentReceiptMessage message)
-        {
-            
-        }
+        { }
 
         public void OnPrintJobStatusResponse(PrintJobStatusResponse response)
         {
