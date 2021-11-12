@@ -76,9 +76,10 @@ namespace CloverRMS
             {
                 try
                 {
-                    CloverConnector.RemoveCloverConnectorListener(Form);
-                    CloverConnector.RemoveCloverConnectorListener(this);
+                    cloverConnector.RemoveCloverConnectorListener(Form);
+                    cloverConnector.RemoveCloverConnectorListener(this);
                     cloverConnector.Dispose();
+                    cloverConnector = null;
                 }
                 catch (Exception)
                 {
