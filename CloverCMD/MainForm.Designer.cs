@@ -183,7 +183,7 @@ namespace CloverRMS
             // 
             this.setConnectingLabelStatusTimer.Enabled = true;
             this.setConnectingLabelStatusTimer.Interval = 500;
-            this.setConnectingLabelStatusTimer.Tick += new System.EventHandler(this.setConnectingLabelStatusTimer_Tick);
+            this.setConnectingLabelStatusTimer.Tick += new System.EventHandler(this.SetConnectingLabelStatusTimer_Tick);
             // 
             // splitter1
             // 
@@ -254,7 +254,7 @@ namespace CloverRMS
             this.ManualCardEntryButton.TabIndex = 38;
             this.ManualCardEntryButton.Text = "Manual Card Entry";
             this.ManualCardEntryButton.UseVisualStyleBackColor = true;
-            this.ManualCardEntryButton.Click += new System.EventHandler(this.manualCardEntryButton_Click);
+            this.ManualCardEntryButton.Click += new System.EventHandler(this.ManualCardEntryButton_Click);
             // 
             // showHideLogsButton
             // 
@@ -266,7 +266,7 @@ namespace CloverRMS
             this.showHideLogsButton.TabIndex = 36;
             this.showHideLogsButton.Text = "Live Logs";
             this.showHideLogsButton.UseVisualStyleBackColor = true;
-            this.showHideLogsButton.Click += new System.EventHandler(this.showHideLogsButton_Click);
+            this.showHideLogsButton.Click += new System.EventHandler(this.ShowHideLogsButton_Click);
             // 
             // RetrievePaymentButton
             // 
@@ -280,7 +280,7 @@ namespace CloverRMS
             this.RetrievePaymentButton.TabIndex = 31;
             this.RetrievePaymentButton.Text = "Retrieve Payment";
             this.RetrievePaymentButton.UseVisualStyleBackColor = true;
-            this.RetrievePaymentButton.Click += new System.EventHandler(this.buttonRetrieveTransaction_Click);
+            this.RetrievePaymentButton.Click += new System.EventHandler(this.ButtonRetrieveTransaction_Click);
             // 
             // ResetDeviceButton
             // 
@@ -292,7 +292,7 @@ namespace CloverRMS
             this.ResetDeviceButton.TabIndex = 30;
             this.ResetDeviceButton.Text = "Reset Device";
             this.ResetDeviceButton.UseVisualStyleBackColor = true;
-            this.ResetDeviceButton.Click += new System.EventHandler(this.resetDeviceButton_Click);
+            this.ResetDeviceButton.Click += new System.EventHandler(this.ResetDeviceButton_Click);
             // 
             // ConnectCloverButton
             // 
@@ -304,7 +304,7 @@ namespace CloverRMS
             this.ConnectCloverButton.TabIndex = 29;
             this.ConnectCloverButton.Text = "Reconnect Clover";
             this.ConnectCloverButton.UseVisualStyleBackColor = true;
-            this.ConnectCloverButton.Click += new System.EventHandler(this.connectCloverButton_Click);
+            this.ConnectCloverButton.Click += new System.EventHandler(this.ConnectCloverButton_Click);
             // 
             // CloseWindowButton
             // 
@@ -317,7 +317,7 @@ namespace CloverRMS
             this.CloseWindowButton.TabIndex = 23;
             this.CloseWindowButton.Text = "Close Window";
             this.CloseWindowButton.UseVisualStyleBackColor = true;
-            this.CloseWindowButton.Click += new System.EventHandler(this.closeWindowButton_Click);
+            this.CloseWindowButton.Click += new System.EventHandler(this.CloseWindowButton_Click);
             // 
             // menuButton
             // 
@@ -332,7 +332,7 @@ namespace CloverRMS
             this.menuButton.TabStop = false;
             this.menuButton.Text = "- - -";
             this.menuButton.UseVisualStyleBackColor = true;
-            this.menuButton.Click += new System.EventHandler(this.merchantStatusLabel_Click);
+            this.menuButton.Click += new System.EventHandler(this.MerchantStatusLabel_Click);
             // 
             // textBoxLog
             // 
@@ -347,11 +347,11 @@ namespace CloverRMS
             this.textBoxLog.TabIndex = 24;
             this.textBoxLog.Visible = false;
             this.textBoxLog.WordWrap = false;
-            this.textBoxLog.TextChanged += new System.EventHandler(this.textBoxLog_TextChanged);
+            this.textBoxLog.TextChanged += new System.EventHandler(this.TextBoxLog_TextChanged);
             // 
             // autoConnectCloverTimer
             // 
-            this.autoConnectCloverTimer.Tick += new System.EventHandler(this.autoConnectCloverTimer_Tick);
+            this.autoConnectCloverTimer.Tick += new System.EventHandler(this.AutoConnectCloverTimer_Tick);
             // 
             // MainForm
             // 

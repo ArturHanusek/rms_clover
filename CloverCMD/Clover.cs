@@ -175,7 +175,7 @@ namespace CloverRMS
             CloverConnector.ResetDevice();
         }
 
-        internal void simulateClick(com.clover.remotepay.transport.KeyPress key)
+        internal void SimulateClick(com.clover.remotepay.transport.KeyPress key)
         {
             InputOption io = new InputOption()
             {
@@ -290,7 +290,10 @@ namespace CloverRMS
             
         }
 
-        public void OnDeviceDisconnected() { }
+        public void OnDeviceDisconnected() 
+        {
+            IsReady = false;
+        }
 
         public void OnVaultCardResponse(VaultCardResponse response)
         { }

@@ -21,11 +21,10 @@ namespace CloverRMS
 
         public SynchronizationContext uiThread;
 
-        private int centAmount = 0;
-        private string filename;
-        private string receiptFilename = $"C:\\CloverCMD\\LastSaleReceipt.txt";
+        private readonly string filename;
+        private readonly string receiptFilename = $"C:\\CloverCMD\\LastSaleReceipt.txt";
 
-        private StreamWriter logFile;
+        private readonly StreamWriter logFile;
 
         public delegate void DoWhenCloverIDLEMethod(RetrieveDeviceStatusResponse response);
         public DoWhenCloverIDLEMethod OnRetrieveDeviceStatusResponse_IDLE;
@@ -35,8 +34,10 @@ namespace CloverRMS
             uiThread = SynchronizationContext.Current;
 
             this.filename = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\Your IT Solutions\\Your IT - Clover Integration\\Logs\\{DateTime.Now.ToString("yyyy_MM_dd")}_CloverCMD.log";
-            this.logFile = new StreamWriter(this.filename, true);
-            this.logFile.AutoFlush = true;
+            this.logFile = new StreamWriter(this.filename, true)
+            {
+                AutoFlush = true
+            };
 
             InitializeComponent();
         }
@@ -157,8 +158,6 @@ namespace CloverRMS
                 return;
             };
 
-            this.centAmount = amount;
-
             Clover.SetAmount(amount);
             Clover.SetTransactionGuid(args[2]);
 
@@ -192,7 +191,8 @@ namespace CloverRMS
         public void ShowErrorAndExit(String Title, String Msg, int ExitCode)
         {
             ShowError(Title, Msg);
-            Program.ExitFailed(ExitCode);
+            Environment.Exit(ExitCode);
+            //Program.ExitFailed(ExitCode);
         }
 
         void ProcessTransactionCNP()
@@ -223,16 +223,20 @@ namespace CloverRMS
 
         public void SaveToFile(SaleResponse response)
         {
-            var receiptFile = new StreamWriter(receiptFilename, false);
-            receiptFile.AutoFlush = true;
+            var receiptFile = new StreamWriter(receiptFilename, false)
+            {
+                AutoFlush = true
+            };
 
             receiptFile.Write($"CARD:  { response.Payment.cardTransaction.cardType} {response.Payment.cardTransaction.last4} AUTH: {response.Payment.cardTransaction.authCode} ID: {response.Payment.id}");
         }
 
         public void SaveManualRefundResponseToFile(ManualRefundResponse response)
         {
-            var receiptFile = new StreamWriter(receiptFilename, false);
-            receiptFile.AutoFlush = true;
+            var receiptFile = new StreamWriter(receiptFilename, false)
+            {
+                AutoFlush = true
+            };
 
             receiptFile.Write($"CARD:  { response.Credit.cardTransaction.cardType} {response.Credit.cardTransaction.last4} AUTH: {response.Credit.cardTransaction.authCode} ID: {response.Credit.id}");
         }
@@ -376,10 +380,9 @@ namespace CloverRMS
         public void OnDeviceDisconnected()
         {
             Log("Clover." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
-            SetStatus("Device disconnected");
-            Clover.IsReady = false;
-            
-            Program.ExitFailed();
+            SetStatus("Device disconnected. Please make sure: \nYour USB cable is plugged into both devices \nUSB Pay Display is turned on on Clover device");
+
+            Environment.Exit(999);
         }
 
         public void OnVaultCardResponse(VaultCardResponse response) { }
@@ -448,40 +451,53 @@ namespace CloverRMS
             Clover.DoOnManualRefundResponse(response);
         }
 
-        private void processTransactionButton_Click(object sender, EventArgs e)
+        private void ProcessTransactionButton_Click(object sender, EventArgs e)
         {
             Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
             Clover.ProcessTransaction();
         }
 
-        private void buttonRetrieveTransaction_Click(object sender, EventArgs e)
+        private void ButtonRetrieveTransaction_Click(object sender, EventArgs e)
         {
             Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
             Clover.SendRetrievePaymentRequest();
             SetStatus("Retrieve payment request sent...");
         }
 
-        private void resetDeviceButton_Click(object sender, EventArgs e)
+        private void ResetDeviceButton_Click(object sender, EventArgs e)
         {
             Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
             SetStatus("Sending Reset Device request");
             Clover.ResetDevice();
         }
 
-        private void onScreenEscapeButton_Click(object sender, EventArgs e)
+        private void OnScreenEscapeButton_Click(object sender, EventArgs e)
         {
             Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
-            Clover.simulateClick(com.clover.remotepay.transport.KeyPress.ESC);
+            Clover.SimulateClick(com.clover.remotepay.transport.KeyPress.ESC);
         }
 
-        private void connectCloverButton_Click(object sender, EventArgs e)
+        private void ConnectCloverButton_Click(object sender, EventArgs e)
         {
             Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
 
-            SetStatus("Closing current connection...");
-            Clover.Dispose(); 
-            Clover = null;
+            try
+            {
+                Log("Closing current connection...");
+                SetStatus("Closing current connection...");
+                Clover.Dispose();
+            } 
+            catch (Exception exception)
+            {
+                Log("Exception " + exception.Message);
+            }
+            finally
+            {
+                Clover = null;
+            }
 
+
+            Log("Creating new connection...");
             SetStatus("Creating new connection...");
             Clover = new Clover(this)
             {
@@ -490,27 +506,27 @@ namespace CloverRMS
             };
         }
 
-        private void closeWindowButton_Click(object sender, EventArgs e)
+        private void CloseWindowButton_Click(object sender, EventArgs e)
         {
             Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
-            Program.ExitFailed();
+            Environment.Exit(999);
         }
 
-        private void setConnectingLabelStatusTimer_Tick(object sender, EventArgs e)
+        private void SetConnectingLabelStatusTimer_Tick(object sender, EventArgs e)
         {
             // this is purely for visual efects, delayed false first status for impresion that works quicker
             // white lie but pleasure creations
             setConnectingLabelStatusTimer.Enabled = false;
-            SetStatus("Connecting device...");
+            SetStatus("Please make sure your USB cable is plugged into both devices and USB Pay Display is turn on on Clover device");
         }
 
-        private void merchantStatusLabel_Click(object sender, EventArgs e)
+        private void MerchantStatusLabel_Click(object sender, EventArgs e)
         {
             Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
             panelButtonsRight.Visible = !panelButtonsRight.Visible;
         }
 
-        private void manualCardEntryButton_Click(object sender, EventArgs e)
+        private void ManualCardEntryButton_Click(object sender, EventArgs e)
         {
             Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
             SetStatus("Entering manual payment mode...");
@@ -520,38 +536,41 @@ namespace CloverRMS
             Clover.InvokeESC();
         }
 
-        private void showHideLogsButton_Click(object sender, EventArgs e)
+        private void ShowHideLogsButton_Click(object sender, EventArgs e)
         {
             Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
             textBoxLog.Visible = !textBoxLog.Visible;
         }
 
-        private void textBoxLog_TextChanged(object sender, EventArgs e)
+        private void TextBoxLog_TextChanged(object sender, EventArgs e)
         {
 
         }
 
-        private void labelStatus_Click(object sender, EventArgs e)
+        private void LabelStatus_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void timerTimeLableUpdate_Tick(object sender, EventArgs e)
+        private void TimerTimeLableUpdate_Tick(object sender, EventArgs e)
         {
 
         }
 
-        private void autoConnectCloverTimer_Tick(object sender, EventArgs e)
+        private void AutoConnectCloverTimer_Tick(object sender, EventArgs e)
         {
             autoConnectCloverTimer.Enabled = false;
 
-            Clover = new Clover(this)
+            if (Clover == null)
             {
-                DoOnSaleResponse = OnSaleResponseMethod,
-                DoOnManualRefundResponse = OnManualRefundResponseMethod
-            };
+                Clover = new Clover(this)
+                {
+                    DoOnSaleResponse = OnSaleResponseMethod,
+                    DoOnManualRefundResponse = OnManualRefundResponseMethod
+                };
 
-            LoadTransactionAmount();
+                LoadTransactionAmount();
+            } 
         }
     }
 }
