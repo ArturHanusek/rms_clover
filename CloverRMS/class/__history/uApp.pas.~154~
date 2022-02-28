@@ -110,6 +110,14 @@ begin
     exit;
   End;
 
+  if (tender.AmountIn > 0) and (tender.AmountOut > 0) then
+  Begin
+    Debug.Send('Change cannot be given on Clover');
+    MessageDlg('Change cannot be given on Clover', mtError, [mbOK], 0);
+    Result := False;
+    exit;
+  End;
+
   if tender.AmountOut > Abs(Transaction.Total) then
   Begin
     Debug.Send('Refund amount cannot exceed transaction total');
@@ -151,12 +159,14 @@ begin
     exit;
   End;
 
-  receiptText = TFile.ReadAllText(receiptFileName);
-  Debug.Send('Receipt', receiptText);
+  receiptText := TFile.ReadAllText(receiptFileName);
+
   tender.SerialNumber := receiptText;
-  tender.ApprovalCode := receiptText;
-  SetVariable(2, receiptText);
+  Debug.Send('Tender.SerialNumber', tender.SerialNumber);
+
+  Debug.Send('Deleting file', receiptFileName);
   DeleteFile(receiptFileName);
+  Debug.Send('Deleted');
 
 end;
 

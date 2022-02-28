@@ -91,6 +91,7 @@ var
   tender    : TRMSTender;
   saleResult: Integer;
   guid : TGuid;
+  receiptText: string;
 begin
 
   Result := False;
@@ -150,10 +151,14 @@ begin
     exit;
   End;
 
-  tender.SerialNumber := TFile.ReadAllText(receiptFileName);
-  tender.ApprovalCode := TFile.ReadAllText(receiptFileName);
-  SetVariable(2, TFile.ReadAllText(receiptFileName));
+  receiptText := TFile.ReadAllText(receiptFileName);
+
+  tender.SerialNumber := receiptText;
+  Debug.Send('Tender.SerialNumber', tender.SerialNumber);
+
+  Debug.Send('Deleting file', receiptFileName);
   DeleteFile(receiptFileName);
+  Debug.Send('Deleted');
 
 end;
 

@@ -110,6 +110,22 @@ begin
     exit;
   End;
 
+  if (Abs(Transaction.Total) > 0) and (tender.AmountOut > 0) then
+  Begin
+    Debug.Send('Change cannot be given on Clover');
+    MessageDlg('Change cannot be given on Clover', mtError, [mbOK], 0);
+    Result := False;
+    exit;
+  End;
+
+  if (Abs(Transaction.Total) < 0) and (tender.AmountIn > 0) then
+  Begin
+    Debug.Send('Change cannot be given on Clover');
+    MessageDlg('Change cannot be given on Clover', mtError, [mbOK], 0);
+    Result := False;
+    exit;
+  End;
+
   if tender.AmountOut > Abs(Transaction.Total) then
   Begin
     Debug.Send('Refund amount cannot exceed transaction total');
