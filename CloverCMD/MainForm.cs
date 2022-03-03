@@ -23,6 +23,7 @@ namespace CloverRMS
 
         private readonly string filename;
         private readonly string receiptFilename = $"C:\\CloverCMD\\LastSaleReceipt.txt";
+        private int secondsInactive = 0;
 
         private readonly StreamWriter logFile;
 
@@ -287,14 +288,16 @@ namespace CloverRMS
         {
             Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "() MessaOge: " + deviceEvent.Message + " Code: " + deviceEvent.Code + " EventState: " + deviceEvent.EventState);
 
+            SetStatus(deviceEvent.Message);
+
+            secondsInactive = 0;
+
+            ManualCardEntryButton.Enabled = deviceEvent.EventState == CloverDeviceEvent.DeviceEventState.START;
+
             this.BeginInvoke((Action)(() =>
             {
                 AddCloverButtons(deviceEvent.InputOptions);
             }));
-
-            SetStatus(deviceEvent.Message);
-
-            ManualCardEntryButton.Enabled = deviceEvent.EventState == CloverDeviceEvent.DeviceEventState.START;
 
             if (deviceEvent.EventState == CloverDeviceEvent.DeviceEventState.RECEIPT_OPTIONS)
             {
@@ -310,6 +313,7 @@ namespace CloverRMS
         }
 
         public void OnDeviceActivityEnd(CloverDeviceEvent deviceEvent) { }
+
         public void OnDeviceError(CloverDeviceErrorEvent deviceErrorEvent)
         {
             Log("Clover." + System.Reflection.MethodBase.GetCurrentMethod().Name + ": Code: " + deviceErrorEvent.Code + "; Message: " + deviceErrorEvent.Message + "; Cause: " + deviceErrorEvent.Cause.Message);
@@ -571,6 +575,23 @@ namespace CloverRMS
 
                 LoadTransactionAmount();
             } 
+        }
+
+        private void forceCloseButtonActivateTimer_Tick(object sender, EventArgs e)
+        {
+            secondsInactive += 1;
+
+            int activationSecondsLeft = 30 - secondsInactive;
+
+            if (activationSecondsLeft < 0)
+            {
+                ForceCloseButton.Text = "FORCE CLOSE";
+                ForceCloseButton.Enabled = true;
+                return;
+            }
+
+            ForceCloseButton.Text = "FORCE CLOSE (" + activationSecondsLeft.ToString() + ")";
+            ForceCloseButton.Enabled = false;
         }
     }
 }

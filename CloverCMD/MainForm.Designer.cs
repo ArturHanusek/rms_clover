@@ -52,10 +52,11 @@ namespace CloverRMS
             this.RetrievePaymentButton = new System.Windows.Forms.Button();
             this.ResetDeviceButton = new System.Windows.Forms.Button();
             this.ConnectCloverButton = new System.Windows.Forms.Button();
-            this.CloseWindowButton = new System.Windows.Forms.Button();
+            this.ForceCloseButton = new System.Windows.Forms.Button();
             this.menuButton = new System.Windows.Forms.Button();
             this.textBoxLog = new System.Windows.Forms.TextBox();
             this.autoConnectCloverTimer = new System.Windows.Forms.Timer(this.components);
+            this.forceCloseButtonActivateTimer = new System.Windows.Forms.Timer(this.components);
             this.panelCenterWindow.SuspendLayout();
             this.cloverStatusPanel.SuspendLayout();
             this.CloverButtonsPanel.SuspendLayout();
@@ -70,7 +71,7 @@ namespace CloverRMS
             this.panelCenterWindow.Controls.Add(this.CloverButtonsPanel);
             this.panelCenterWindow.Location = new System.Drawing.Point(431, 116);
             this.panelCenterWindow.Name = "panelCenterWindow";
-            this.panelCenterWindow.Size = new System.Drawing.Size(616, 265);
+            this.panelCenterWindow.Size = new System.Drawing.Size(590, 265);
             this.panelCenterWindow.TabIndex = 10;
             // 
             // cloverStatusPanel
@@ -82,7 +83,7 @@ namespace CloverRMS
             this.cloverStatusPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cloverStatusPanel.Location = new System.Drawing.Point(0, 0);
             this.cloverStatusPanel.Name = "cloverStatusPanel";
-            this.cloverStatusPanel.Size = new System.Drawing.Size(466, 265);
+            this.cloverStatusPanel.Size = new System.Drawing.Size(465, 265);
             this.cloverStatusPanel.TabIndex = 25;
             // 
             // label1
@@ -92,7 +93,7 @@ namespace CloverRMS
             this.label1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label1.Font = new System.Drawing.Font("Arial", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(10, 196);
+            this.label1.Location = new System.Drawing.Point(9, 196);
             this.label1.Margin = new System.Windows.Forms.Padding(10);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(271, 47);
@@ -121,7 +122,7 @@ namespace CloverRMS
             this.labelTotal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.labelTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTotal.ForeColor = System.Drawing.Color.Black;
-            this.labelTotal.Location = new System.Drawing.Point(287, 196);
+            this.labelTotal.Location = new System.Drawing.Point(286, 196);
             this.labelTotal.Margin = new System.Windows.Forms.Padding(10);
             this.labelTotal.Name = "labelTotal";
             this.labelTotal.Size = new System.Drawing.Size(161, 47);
@@ -135,9 +136,9 @@ namespace CloverRMS
             this.CloverButtonsPanel.Controls.Add(this.button2);
             this.CloverButtonsPanel.Controls.Add(this.button3);
             this.CloverButtonsPanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.CloverButtonsPanel.Location = new System.Drawing.Point(466, 0);
+            this.CloverButtonsPanel.Location = new System.Drawing.Point(465, 0);
             this.CloverButtonsPanel.Name = "CloverButtonsPanel";
-            this.CloverButtonsPanel.Size = new System.Drawing.Size(150, 265);
+            this.CloverButtonsPanel.Size = new System.Drawing.Size(125, 265);
             this.CloverButtonsPanel.TabIndex = 23;
             // 
             // button1
@@ -147,7 +148,7 @@ namespace CloverRMS
             this.button1.ForeColor = System.Drawing.SystemColors.Window;
             this.button1.Location = new System.Drawing.Point(3, 3);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(140, 80);
+            this.button1.Size = new System.Drawing.Size(120, 60);
             this.button1.TabIndex = 3;
             this.button1.Text = "CANCEL";
             this.button1.UseVisualStyleBackColor = true;
@@ -158,9 +159,9 @@ namespace CloverRMS
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.ForeColor = System.Drawing.SystemColors.Window;
-            this.button2.Location = new System.Drawing.Point(3, 89);
+            this.button2.Location = new System.Drawing.Point(3, 69);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(140, 80);
+            this.button2.Size = new System.Drawing.Size(120, 60);
             this.button2.TabIndex = 4;
             this.button2.Text = "CLEAR";
             this.button2.UseVisualStyleBackColor = true;
@@ -171,9 +172,9 @@ namespace CloverRMS
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button3.ForeColor = System.Drawing.SystemColors.Window;
-            this.button3.Location = new System.Drawing.Point(3, 175);
+            this.button3.Location = new System.Drawing.Point(3, 135);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(140, 80);
+            this.button3.Size = new System.Drawing.Size(120, 60);
             this.button3.TabIndex = 5;
             this.button3.Text = "DONE";
             this.button3.UseVisualStyleBackColor = true;
@@ -212,7 +213,7 @@ namespace CloverRMS
             this.panelButtonsRight.Controls.Add(this.RetrievePaymentButton);
             this.panelButtonsRight.Controls.Add(this.ResetDeviceButton);
             this.panelButtonsRight.Controls.Add(this.ConnectCloverButton);
-            this.panelButtonsRight.Controls.Add(this.CloseWindowButton);
+            this.panelButtonsRight.Controls.Add(this.ForceCloseButton);
             this.panelButtonsRight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelButtonsRight.Location = new System.Drawing.Point(0, 30);
             this.panelButtonsRight.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
@@ -306,18 +307,19 @@ namespace CloverRMS
             this.ConnectCloverButton.UseVisualStyleBackColor = true;
             this.ConnectCloverButton.Click += new System.EventHandler(this.ConnectCloverButton_Click);
             // 
-            // CloseWindowButton
+            // ForceCloseButton
             // 
-            this.CloseWindowButton.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.CloseWindowButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CloseWindowButton.ForeColor = System.Drawing.Color.White;
-            this.CloseWindowButton.Location = new System.Drawing.Point(0, 604);
-            this.CloseWindowButton.Name = "CloseWindowButton";
-            this.CloseWindowButton.Size = new System.Drawing.Size(155, 30);
-            this.CloseWindowButton.TabIndex = 23;
-            this.CloseWindowButton.Text = "Close Window";
-            this.CloseWindowButton.UseVisualStyleBackColor = true;
-            this.CloseWindowButton.Click += new System.EventHandler(this.CloseWindowButton_Click);
+            this.ForceCloseButton.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.ForceCloseButton.Enabled = false;
+            this.ForceCloseButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ForceCloseButton.ForeColor = System.Drawing.Color.White;
+            this.ForceCloseButton.Location = new System.Drawing.Point(0, 604);
+            this.ForceCloseButton.Name = "ForceCloseButton";
+            this.ForceCloseButton.Size = new System.Drawing.Size(155, 30);
+            this.ForceCloseButton.TabIndex = 23;
+            this.ForceCloseButton.Text = "FORCE CLOSE";
+            this.ForceCloseButton.UseVisualStyleBackColor = true;
+            this.ForceCloseButton.Click += new System.EventHandler(this.CloseWindowButton_Click);
             // 
             // menuButton
             // 
@@ -352,6 +354,13 @@ namespace CloverRMS
             // autoConnectCloverTimer
             // 
             this.autoConnectCloverTimer.Tick += new System.EventHandler(this.AutoConnectCloverTimer_Tick);
+            // 
+            // forceCloseButtonActivateTimer
+            // 
+            this.forceCloseButtonActivateTimer.Enabled = true;
+            this.forceCloseButtonActivateTimer.Interval = 1000;
+            this.forceCloseButtonActivateTimer.Tag = "";
+            this.forceCloseButtonActivateTimer.Tick += new System.EventHandler(this.forceCloseButtonActivateTimer_Tick);
             // 
             // MainForm
             // 
@@ -400,7 +409,7 @@ namespace CloverRMS
         private System.Windows.Forms.Button RetrievePaymentButton;
         private System.Windows.Forms.Button ResetDeviceButton;
         private System.Windows.Forms.Button ConnectCloverButton;
-        private System.Windows.Forms.Button CloseWindowButton;
+        private System.Windows.Forms.Button ForceCloseButton;
         private System.Windows.Forms.TextBox textBoxLog;
         private System.Windows.Forms.Button showHideLogsButton;
         private System.Windows.Forms.Button ManualCardEntryButton;
@@ -410,6 +419,7 @@ namespace CloverRMS
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Timer autoConnectCloverTimer;
+        private System.Windows.Forms.Timer forceCloseButtonActivateTimer;
     }
 }
 
