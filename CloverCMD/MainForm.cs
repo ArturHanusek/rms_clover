@@ -73,10 +73,10 @@ namespace CloverRMS
                     newButton.BackColor = Color.Transparent;
                     newButton.FlatAppearance.MouseDownBackColor = Color.Gray;
                     newButton.FlatAppearance.MouseOverBackColor = Color.DarkGray;
-                    newButton.Font = new Font("Microsoft Sans Serif", 16, FontStyle.Bold);
+                    newButton.Font = new Font("Microsoft Sans Serif", 13, FontStyle.Bold);
                     newButton.Dock = DockStyle.Top;
-                    newButton.Height = 80;
-                    newButton.Width = 140;
+                    newButton.Height = 60;
+                    newButton.Width = 120;
 
                     CloverButtonsPanel.Controls.Add(newButton);
                 }
@@ -143,12 +143,14 @@ namespace CloverRMS
 
             if (args.Length == 1)
             {
+                Log("Amount is not specified");
                 SetStatus("Amount is not specified");
                 return;
             }
 
             if (args.Length == 2)
             {
+                Log("Transaction GUID is not specified");
                 SetStatus("Transaction GUID is not specified");
                 return;
             }
@@ -159,8 +161,7 @@ namespace CloverRMS
                 return;
             };
 
-            Clover.SetAmount(amount);
-            Clover.SetTransactionGuid(args[2]);
+            Clover.SetTransactionGuid(args[2], amount);
 
             if (Clover._amount < 0)
             {
@@ -293,7 +294,6 @@ namespace CloverRMS
             secondsInactive = 0;
 
             ManualCardEntryButton.Enabled = deviceEvent.EventState == CloverDeviceEvent.DeviceEventState.START;
-
             this.BeginInvoke((Action)(() =>
             {
                 AddCloverButtons(deviceEvent.InputOptions);
@@ -513,7 +513,13 @@ namespace CloverRMS
         private void CloseWindowButton_Click(object sender, EventArgs e)
         {
             Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
-            Environment.Exit(999);
+
+            if (MessageBoxConfirmed("Are you sure?")) { 
+                if (MessageBoxConfirmed("You FORCING closing the program and entring manual mode. Your responsibility is to make sure that appropriate actions are taken on Clover device and transaction is correctly charged"))
+                {
+                    Environment.Exit(999);
+                }
+            }
         }
 
         private void SetConnectingLabelStatusTimer_Tick(object sender, EventArgs e)
@@ -582,6 +588,19 @@ namespace CloverRMS
             secondsInactive += 1;
 
             int activationSecondsLeft = 30 - secondsInactive;
+            
+            if (activationSecondsLeft % 10 == 0)
+            {
+                Log("UI: Sending RetrieveDeviceStatus request");
+                Clover.RetrieveDeviceStatus();
+            }
+
+            if (activationSecondsLeft < 0)
+            {
+                ForceCloseButton.Text = "FORCE CLOSE";
+                ForceCloseButton.Enabled = true;
+                return;
+            }
 
             if (activationSecondsLeft < 0)
             {

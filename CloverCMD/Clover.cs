@@ -1,6 +1,8 @@
 ﻿using com.clover.remotepay.sdk;
 using com.clover.remotepay.transport;
 using System;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -49,11 +51,24 @@ namespace CloverRMS
             return this;
         }
 
-        public Clover SetTransactionGuid(string guid)
+        public Clover SetTransactionGuid(string guid, int amount)
         {
-            this._guid = guid;
-            this.Log("Transaction GUID: " + this._guid);
-            return this;
+            this._amount = amount;
+            this._guid = StringToGUID(guid + "-" + amount.ToString()).ToString("N");
+
+            this.Log("Transaction Amount: " + this._amount);
+            this.Log("Transaction GUID: " + guid);
+            this.Log("Payment GUID: " + this._guid);
+            return this;    
+        }
+
+        private Guid StringToGUID(string v)
+        {            
+            // Create a new instance of the MD5CryptoServiceProvider object.
+            MD5 md5Hasher = MD5.Create();
+            // Convert the input string to a byte array and compute the hash.
+            byte[] data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(v));
+            return new Guid(data);
         }
 
         public bool IsDeviceConnected()
