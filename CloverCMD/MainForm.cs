@@ -514,9 +514,16 @@ namespace CloverRMS
         {
             Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
 
-            if (MessageBoxConfirmed("Are you sure?")) { 
-                if (MessageBoxConfirmed("You FORCING closing the program and entring manual mode. Your responsibility is to make sure that appropriate actions are taken on Clover device and transaction is correctly charged"))
+            if (MessageBoxConfirmed("Are you sure?")) 
+            {
+                if (MessageBoxConfirmed("You FORCE CLOSING the program and entering manual mode. Your responsibility is to make sure that appropriate actions are taken on Clover device and transaction is charged correctly"))
                 {
+                    string message = "If payment already went trough on the Clover device, you can use 'Retrieve Payment' button once connection with the device is fixed";
+                    Log("MessageBox: " + message);
+                    MessageBox.Show(this, message, "Confirm", MessageBoxButtons.OK, MessageBoxIcon.Question);
+                    Log("Clicked: OK");
+
+                    Log("FORCE CLOSE");
                     Environment.Exit(999);
                 }
             }
