@@ -91,7 +91,7 @@ namespace CloverRMS
         {
             SetStatus("");
             this.Log("");
-            this.Log("Build 2021/11/03");
+            this.Log("Release 2022.03.04");
             this.Log("Clover SDK: 4.0.5");
 
             InputOption[] empty = { };
