@@ -103,6 +103,10 @@ begin
     exit;
   End;
 
+  Debug.Send('TransactionTotal: ', transaction.Total);
+  Debug.Send('AmountIn: ', tender.AmountIn);
+  Debug.Send('AmountOut: ', tender.AmountOut);
+
   if (tender.amount = 0) then
   Begin
     Debug.Send('Tender amount is 0, exiting');
@@ -110,7 +114,7 @@ begin
     exit;
   End;
 
-  if (Abs(Transaction.Total) > 0) and (tender.AmountOut > 0) then
+  if (Transaction.Total > 0) and (tender.AmountOut > 0) then
   Begin
     Debug.Send('Change cannot be given on Clover');
     MessageDlg('Change cannot be given on Clover', mtError, [mbOK], 0);
@@ -118,7 +122,7 @@ begin
     exit;
   End;
 
-  if (Abs(Transaction.Total) < 0) and (tender.AmountIn > 0) then
+  if (Transaction.Total < 0) and (tender.AmountIn > 0) then
   Begin
     Debug.Send('Change cannot be given on Clover');
     MessageDlg('Change cannot be given on Clover', mtError, [mbOK], 0);
