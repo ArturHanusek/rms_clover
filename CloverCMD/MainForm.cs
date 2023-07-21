@@ -433,7 +433,7 @@ namespace CloverRMS
         {
             Log("Clover." + System.Reflection.MethodBase.GetCurrentMethod().Name + "() Payment.result: " + response.Payment.result + "; Payment: " + response.Payment.externalPaymentId + "; Payment.amount: " + response.Payment.amount);
 
-            if ((response.Payment.externalPaymentId == Clover._guid) && (response.Payment.amount == Clover._amount))
+            if ((response.Payment.externalPaymentId == Clover._guid) && (response.Payment.amount == Clover._amount) && (response.Payment.result == Result.SUCCESS))
             {
                 Program.ExitSuccess();
             }
@@ -606,13 +606,7 @@ namespace CloverRMS
             {
                 ForceCloseButton.Text = "FORCE CLOSE";
                 ForceCloseButton.Enabled = true;
-                return;
-            }
-
-            if (activationSecondsLeft < 0)
-            {
-                ForceCloseButton.Text = "FORCE CLOSE";
-                ForceCloseButton.Enabled = true;
+                panelButtonsRight.Visible = true;
                 return;
             }
 
