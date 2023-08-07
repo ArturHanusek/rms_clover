@@ -91,8 +91,8 @@ namespace CloverRMS
         {
             SetStatus("");
             this.Log("");
-            this.Log("Release 2022.03.04");
-            this.Log("Clover SDK: 4.0.5");
+            this.Log("Release 2023.08.07");
+            this.Log("Clover SDK: 4.0.6");
 
             InputOption[] empty = { };
 
@@ -253,7 +253,13 @@ namespace CloverRMS
 
         public void OnSaleResponseMethod(SaleResponse response)
         {
-            Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Reason: " + response.Reason + "; Message: " + response.Message + "; Result: " + response.Result);
+            Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Response: Reason: " + response.Reason + "; Message: " + response.Message + "; Result: " + response.Result);
+            Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment: id: " + response.Payment.id + "; externalReferenceId: " + response.Payment.externalReferenceId + "; externalPaymentId: " + response.Payment.externalPaymentId + "; amount:" + response.Payment.amount);
+
+            if (Clover._guid != response.Payment.externalPaymentId)
+            {
+                Program.ExitFailed(1000 + Convert.ToInt32(response.Result));
+            }
 
             switch (response.Result)
             {
@@ -263,14 +269,20 @@ namespace CloverRMS
                     break;
 
                 default:
-                    Program.ExitFailed(Convert.ToInt32(response.Result));
+                    Program.ExitFailed(1000 + Convert.ToInt32(response.Result));
                     break;
             }
         }
 
         public void OnManualRefundResponseMethod(ManualRefundResponse response)
         {
-            Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "() " + " Message: " + response.Message + " Result: " + response.Result.ToString());
+            Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Response: Reason: " + response.Reason + "; Message: " + response.Message + "; Result: " + response.Result);
+            Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment: id: " + response.Credit.id + "; externalReferenceId: " + response.Credit.externalReferenceId + "; amount:" + response.Credit.amount);
+
+            if (Clover._guid != response.Credit.externalReferenceId)
+            {
+                Program.ExitFailed(1000 + Convert.ToInt32(response.Result));
+            }
 
             switch (response.Result)
             {
@@ -280,7 +292,7 @@ namespace CloverRMS
                     break;
 
                 default:
-                    Program.ExitFailed(Convert.ToInt32(response.Result));
+                    Program.ExitFailed(1000 + Convert.ToInt32(response.Result));
                     break;
             }
         }

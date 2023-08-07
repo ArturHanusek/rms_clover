@@ -1438,6 +1438,11 @@
             The external reference id if associated with the payment
             </summary>
         </member>
+        <member name="P:com.clover.remotepay.sdk.BaseTransactionRequest.PresentQrcOnly">
+            <summary>
+            Present only the QR Code for Payment
+            </summary>
+        </member>
         <member name="T:com.clover.remotepay.sdk.TransactionRequest">
             <summary>
             Extended Sale/Auth Transaction Request
@@ -1702,6 +1707,16 @@
             <summary>
             Reason for void, must be one of the recognized categories, see VoidPaymentRequest consts for common options
             use VoidPaymentRequest.USER_CANCEL as default
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.VoidPaymentRequest.DisablePrinting">
+            <summary>
+            If true, then do not print using the clover printer.  Return print information.
+            </summary>
+        </member>
+        <member name="P:com.clover.remotepay.sdk.VoidPaymentRequest.DisableReceiptSelection">
+            <summary>
+            Do not show the receipt options screen
             </summary>
         </member>
         <member name="T:com.clover.remotepay.sdk.VoidPaymentResponse">
