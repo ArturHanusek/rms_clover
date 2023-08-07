@@ -253,47 +253,75 @@ namespace CloverRMS
 
         public void OnSaleResponseMethod(SaleResponse response)
         {
-            Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Response: Reason: " + response.Reason + "; Message: " + response.Message + "; Result: " + response.Result);
-            Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment: id: " + response.Payment.id + "; externalReferenceId: " + response.Payment.externalReferenceId + "; externalPaymentId: " + response.Payment.externalPaymentId + "; amount:" + response.Payment.amount);
-
-            if (Clover._guid != response.Payment.externalPaymentId)
+            try
             {
-                Program.ExitFailed(1000 + Convert.ToInt32(response.Result));
+                Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Response: Reason: " + response.Reason + "; Message: " + response.Message + "; Result: " + response.Result);
+
+                if (response.Payment is object)
+                {
+                    Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.id: " + response.Payment.id);
+                    Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.externalPaymentId: " + response.Payment.externalPaymentId);
+                    Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.amount:" + response.Payment.amount);
+
+                    if (Clover._guid != response.Payment.externalPaymentId)
+                    {
+                        Log("Payment ID does not transaction GUID, transaction fails");
+                        Program.ExitFailed(1000 + Convert.ToInt32(response.Result));
+                    }
+                }
+
+                switch (response.Result)
+                {
+                    case ResponseCode.SUCCESS:
+                        SaveToFile(response);
+                        Program.ExitSuccess();
+                        break;
+
+                    default:
+                        Program.ExitFailed(1000 + Convert.ToInt32(response.Result));
+                        break;
+                }
             }
-
-            switch (response.Result)
+            catch (Exception exception)
             {
-                case ResponseCode.SUCCESS:
-                    SaveToFile(response);
-                    Program.ExitSuccess();
-                    break;
-
-                default:
-                    Program.ExitFailed(1000 + Convert.ToInt32(response.Result));
-                    break;
+                Log("Exception " + exception.Message);
             }
         }
 
         public void OnManualRefundResponseMethod(ManualRefundResponse response)
         {
-            Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Response: Reason: " + response.Reason + "; Message: " + response.Message + "; Result: " + response.Result);
-            Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment: id: " + response.Credit.id + "; externalReferenceId: " + response.Credit.externalReferenceId + "; amount:" + response.Credit.amount);
-
-            if (Clover._guid != response.Credit.externalReferenceId)
+            try
             {
-                Program.ExitFailed(1000 + Convert.ToInt32(response.Result));
+                Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Response: Reason: " + response.Reason + "; Message: " + response.Message + "; Result: " + response.Result);
+           
+                if (response.Credit is object)
+                {
+                    Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.id: " + response.Credit.id);
+                    Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.externalReferenceId: " + response.Credit.externalReferenceId);
+                    Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.amount:" + response.Credit.amount);
+
+                    if (Clover._guid != response.Credit.externalReferenceId)
+                    {
+                        Log("Payment ID does not transaction GUID, transaction fails");
+                        Program.ExitFailed(1000 + Convert.ToInt32(response.Result));
+                    }
+                }
+
+                switch (response.Result)
+                {
+                    case ResponseCode.SUCCESS:
+                        SaveManualRefundResponseToFile(response);
+                        Program.ExitSuccess();
+                        break;
+
+                    default:
+                        Program.ExitFailed(1000 + Convert.ToInt32(response.Result));
+                        break;
+                }
             }
-
-            switch (response.Result)
+            catch (Exception exception)
             {
-                case ResponseCode.SUCCESS:
-                    SaveManualRefundResponseToFile(response);
-                    Program.ExitSuccess();
-                    break;
-
-                default:
-                    Program.ExitFailed(1000 + Convert.ToInt32(response.Result));
-                    break;
+                Log("Exception " + exception.Message);
             }
         }
 
