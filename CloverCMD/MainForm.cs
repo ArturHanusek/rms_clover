@@ -225,12 +225,19 @@ namespace CloverRMS
 
         public void SaveToFile(SaleResponse response)
         {
-            var receiptFile = new StreamWriter(receiptFilename, false)
+            try
             {
-                AutoFlush = true
-            };
+                var receiptFile = new StreamWriter(receiptFilename, false)
+                {
+                    AutoFlush = true
+                };
 
-            receiptFile.Write($"CARD:  { response.Payment.cardTransaction.cardType} {response.Payment.cardTransaction.last4} AUTH: {response.Payment.cardTransaction.authCode} ID: {response.Payment.id}");
+                receiptFile.Write($"CARD:  { response.Payment.cardTransaction.cardType} {response.Payment.cardTransaction.last4} AUTH: {response.Payment.cardTransaction.authCode} ID: {response.Payment.id}");
+            }
+            catch (Exception exception)
+            {
+                Log("Exception " + exception.Message);
+            }
         }
 
         public void SaveManualRefundResponseToFile(ManualRefundResponse response)
