@@ -269,35 +269,34 @@ namespace CloverRMS
             {
                 Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Response: Reason: " + response.Reason + "; Message: " + response.Message + "; Result: " + response.Result);
 
-                if (response.Payment is object)
+                switch (response.Result)
                 {
-                    Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.id: " + response.Payment.id);
-                    Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.externalPaymentId: " + response.Payment.externalPaymentId);
-                    Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.amount:" + response.Payment.amount);
+                    case ResponseCode.SUCCESS:
+                        Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.id: " + response.Payment.id);
+                        Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.externalPaymentId: " + response.Payment.externalPaymentId);
+                        Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.amount:" + response.Payment.amount);
 
-                    switch (response.Result)
-                    {
-                        case ResponseCode.SUCCESS:
-                            if ((response.Payment.externalPaymentId == Clover._guid) && (response.Payment.amount == Clover._amount))
-                            {
-                                SaveToFile(response);
-                                Program.ExitSuccess();
-                            } else
-                            {
-                                Log("Payment ID does not match transaction GUID, transaction fails");
-                                Program.ExitFailed(SALE_RESPONSE_FAILED_INCORRECT_GUID);
-                            }
-                            break;
+                        if ((response.Payment.externalPaymentId == Clover._guid) && (response.Payment.amount == Clover._amount))
+                        {
+                            SaveToFile(response);
+                            Program.ExitSuccess();
+                        } else
+                        {
+                            Log("Payment ID does not match transaction GUID, transaction fails");
+                            Program.ExitFailed(SALE_RESPONSE_FAILED_INCORRECT_GUID);
+                        }
+                        break;
 
-                        default:
-                            Program.ExitFailed(SALE_RESPONSE_FAILED);
-                            break;
-                    }
+                    default:
+                        Program.ExitFailed(SALE_RESPONSE_FAILED);
+                        break;
                 }
+               
             }
             catch (Exception exception)
             {
                 Log("Exception " + exception.Message);
+                Program.ExitFailed(SALE_RESPONSE_FAILED);
             }
         }
 
@@ -307,37 +306,35 @@ namespace CloverRMS
             {
                 Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Response: Reason: " + response.Reason + "; Message: " + response.Message + "; Result: " + response.Result);
            
-                if (response.Credit is object)
+                switch (response.Result)
                 {
-                    Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.id: " + response.Credit.id);
-                    Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.externalReferenceId: " + response.Credit.externalReferenceId);
-                    Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.amount:" + response.Credit.amount);
+                    case ResponseCode.SUCCESS:
+                        Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.id: " + response.Credit.id);
+                        Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.externalReferenceId: " + response.Credit.externalReferenceId);
+                        Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.amount:" + response.Credit.amount);
 
+                        if ((response.Credit.externalReferenceId == Clover._guid) && (response.Credit.amount == Clover._amount))
+                        {
+                            SaveManualRefundResponseToFile(response);
+                            Program.ExitSuccess();
+                        }
+                        else
+                        {
+                            Log("Payment ID does not match transaction GUID, transaction fails");
+                            Program.ExitFailed(SALE_RESPONSE_FAILED_INCORRECT_GUID);
+                        }
+                        break;
 
-                    switch (response.Result)
-                    {
-                        case ResponseCode.SUCCESS:
-                            if ((response.Credit.externalReferenceId == Clover._guid) && (response.Credit.amount == Clover._amount))
-                            {
-                                SaveManualRefundResponseToFile(response);
-                                Program.ExitSuccess();
-                            }
-                            else
-                            {
-                                Log("Payment ID does not match transaction GUID, transaction fails");
-                                Program.ExitFailed(SALE_RESPONSE_FAILED_INCORRECT_GUID);
-                            }
-                            break;
-
-                        default:
-                            Program.ExitFailed(SALE_RESPONSE_FAILED);
-                            break;
-                    }
+                    default:
+                        Program.ExitFailed(SALE_RESPONSE_FAILED);
+                        break;
                 }
+                
             }
             catch (Exception exception)
             {
                 Log("Exception " + exception.Message);
+                Program.ExitFailed(SALE_RESPONSE_FAILED);
             }
         }
 
