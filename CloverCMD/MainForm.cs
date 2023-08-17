@@ -17,6 +17,11 @@ namespace CloverRMS
 {
     public partial class MainForm : Form, ICloverConnectorListener
     {
+        const string RELEASE_VERSION = "Release 2023.08.17";
+        const string CLOVER_SDK_VERSION = "Clover SDK: 4.0.6";
+        const int SALE_RESPONSE_FAILED = 1001;
+        const int SALE_RESPONSE_FAILED_INCORRECT_GUID = 1002;
+
         private Clover Clover;
 
         public SynchronizationContext uiThread;
@@ -91,8 +96,8 @@ namespace CloverRMS
         {
             SetStatus("");
             this.Log("");
-            this.Log("Release 2023.08.07");
-            this.Log("Clover SDK: 4.0.6");
+            this.Log(RELEASE_VERSION);
+            this.Log(CLOVER_SDK_VERSION);
 
             InputOption[] empty = { };
 
@@ -270,23 +275,24 @@ namespace CloverRMS
                     Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.externalPaymentId: " + response.Payment.externalPaymentId);
                     Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.amount:" + response.Payment.amount);
 
-                    if (Clover._guid != response.Payment.externalPaymentId)
+                    switch (response.Result)
                     {
-                        Log("Payment ID does not transaction GUID, transaction fails");
-                        Program.ExitFailed(1000 + Convert.ToInt32(response.Result));
+                        case ResponseCode.SUCCESS:
+                            if ((response.Payment.externalPaymentId == Clover._guid) && (response.Payment.amount == Clover._amount))
+                            {
+                                SaveToFile(response);
+                                Program.ExitSuccess();
+                            } else
+                            {
+                                Log("Payment ID does not match transaction GUID, transaction fails");
+                                Program.ExitFailed(SALE_RESPONSE_FAILED_INCORRECT_GUID);
+                            }
+                            break;
+
+                        default:
+                            Program.ExitFailed(SALE_RESPONSE_FAILED);
+                            break;
                     }
-                }
-
-                switch (response.Result)
-                {
-                    case ResponseCode.SUCCESS:
-                        SaveToFile(response);
-                        Program.ExitSuccess();
-                        break;
-
-                    default:
-                        Program.ExitFailed(1000 + Convert.ToInt32(response.Result));
-                        break;
                 }
             }
             catch (Exception exception)
@@ -307,23 +313,26 @@ namespace CloverRMS
                     Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.externalReferenceId: " + response.Credit.externalReferenceId);
                     Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.amount:" + response.Credit.amount);
 
-                    if (Clover._guid != response.Credit.externalReferenceId)
+
+                    switch (response.Result)
                     {
-                        Log("Payment ID does not transaction GUID, transaction fails");
-                        Program.ExitFailed(1000 + Convert.ToInt32(response.Result));
+                        case ResponseCode.SUCCESS:
+                            if ((response.Credit.externalReferenceId == Clover._guid) && (response.Credit.amount == Clover._amount))
+                            {
+                                SaveManualRefundResponseToFile(response);
+                                Program.ExitSuccess();
+                            }
+                            else
+                            {
+                                Log("Payment ID does not match transaction GUID, transaction fails");
+                                Program.ExitFailed(SALE_RESPONSE_FAILED_INCORRECT_GUID);
+                            }
+                            break;
+
+                        default:
+                            Program.ExitFailed(SALE_RESPONSE_FAILED);
+                            break;
                     }
-                }
-
-                switch (response.Result)
-                {
-                    case ResponseCode.SUCCESS:
-                        SaveManualRefundResponseToFile(response);
-                        Program.ExitSuccess();
-                        break;
-
-                    default:
-                        Program.ExitFailed(1000 + Convert.ToInt32(response.Result));
-                        break;
                 }
             }
             catch (Exception exception)
