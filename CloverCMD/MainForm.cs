@@ -223,11 +223,6 @@ namespace CloverRMS
             this.ProcessTransactionCNP();
         }
 
-        private void ButtonCancel_Click(object sender, EventArgs e)
-        {
-            
-        }
-
         public void SaveToFile(SaleResponse response)
         {
             try
@@ -610,21 +605,6 @@ namespace CloverRMS
         {
             Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
             textBoxLog.Visible = !textBoxLog.Visible;
-        }
-
-        private void TextBoxLog_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void LabelStatus_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void TimerTimeLableUpdate_Tick(object sender, EventArgs e)
-        {
-
         }
 
         private void AutoConnectCloverTimer_Tick(object sender, EventArgs e)
