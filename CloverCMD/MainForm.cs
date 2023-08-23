@@ -33,7 +33,7 @@ namespace CloverRMS
         private readonly StreamWriter logFile;
 
         public delegate void DoWhenCloverIDLEMethod(RetrieveDeviceStatusResponse response);
-        public DoWhenCloverIDLEMethod OnRetrieveDeviceStatusResponse_IDLE;
+        public DoWhenCloverIDLEMethod OnRetrieveDeviceStatusResponse_ProcessTransactionWhenIDLE;
 
         public MainForm()
         {
@@ -103,7 +103,7 @@ namespace CloverRMS
 
             AddCloverButtons(empty);
 
-            OnRetrieveDeviceStatusResponse_IDLE = ProcessTrasactionWhenIDLE;
+            OnRetrieveDeviceStatusResponse_ProcessTransactionWhenIDLE = ProcessTrasactionWhenIDLE;
             autoConnectCloverTimer.Enabled = true;
         }
 
@@ -274,6 +274,7 @@ namespace CloverRMS
                         if ((response.Payment.externalPaymentId == Clover._guid) && (response.Payment.amount == Clover._amount))
                         {
                             SaveToFile(response);
+                            Clover.ResetDevice();
                             Program.ExitSuccess();
                         } else
                         {
@@ -311,6 +312,7 @@ namespace CloverRMS
                         if ((response.Credit.externalReferenceId == Clover._guid) && (response.Credit.amount == Clover._amount))
                         {
                             SaveManualRefundResponseToFile(response);
+                            Clover.ResetDevice();
                             Program.ExitSuccess();
                         }
                         else
@@ -463,10 +465,10 @@ namespace CloverRMS
 
             if (response.State == com.clover.remotepay.sdk.ExternalDeviceState.IDLE)
             {
-                if (OnRetrieveDeviceStatusResponse_IDLE != null)
+                if (OnRetrieveDeviceStatusResponse_ProcessTransactionWhenIDLE != null)
                 {
-                    OnRetrieveDeviceStatusResponse_IDLE(response);
-                    OnRetrieveDeviceStatusResponse_IDLE = null;
+                    OnRetrieveDeviceStatusResponse_ProcessTransactionWhenIDLE(response);
+                    OnRetrieveDeviceStatusResponse_ProcessTransactionWhenIDLE = null;
                 }
             }
         }
