@@ -32,7 +32,7 @@ namespace CloverRMS
 
         private readonly StreamWriter logFile;
 
-        public delegate void OnCloverDeviceStatus_IDLE_Method(RetrieveDeviceStatusResponse response);
+        public delegate void OnCloverDeviceStatus_IDLE_Method();
         public OnCloverDeviceStatus_IDLE_Method OnCloverDeviceStatus_IDLE;
 
         public MainForm()
@@ -452,10 +452,8 @@ namespace CloverRMS
         public void OnRetrievePrintersResponse(RetrievePrintersResponse response) { }
         public void OnCustomActivityResponse(CustomActivityResponse response) { }
 
-        public void ProcessTrasactionWhenIDLE(RetrieveDeviceStatusResponse response)
+        public void ProcessTrasactionWhenIDLE()
         {
-            Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "() State: " + response.State.ToString() + "; Data.CustomActivityId: " + response.Data.CustomActivityId + "; Data.ExternalPaymentId: " + response.Data.ExternalPaymentId);
-
             Clover.ProcessTransaction();
         }
 
@@ -467,7 +465,7 @@ namespace CloverRMS
             {
                 if (OnCloverDeviceStatus_IDLE != null)
                 {
-                    OnCloverDeviceStatus_IDLE(response);
+                    OnCloverDeviceStatus_IDLE();
                     OnCloverDeviceStatus_IDLE = null;
                 }
             }
@@ -625,7 +623,7 @@ namespace CloverRMS
             } 
         }
 
-        private void forceCloseButtonActivateTimer_Tick(object sender, EventArgs e)
+        private void ForceCloseButtonActivateTimer_Tick(object sender, EventArgs e)
         {
             secondsInactive += 1;
 

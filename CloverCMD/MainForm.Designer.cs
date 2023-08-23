@@ -375,7 +375,7 @@ namespace CloverRMS
             this.forceCloseButtonActivateTimer.Enabled = true;
             this.forceCloseButtonActivateTimer.Interval = 1000;
             this.forceCloseButtonActivateTimer.Tag = "";
-            this.forceCloseButtonActivateTimer.Tick += new System.EventHandler(this.forceCloseButtonActivateTimer_Tick);
+            this.forceCloseButtonActivateTimer.Tick += new System.EventHandler(this.ForceCloseButtonActivateTimer_Tick);
             // 
             // MainForm
             // 
