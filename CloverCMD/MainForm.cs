@@ -32,8 +32,8 @@ namespace CloverRMS
 
         private readonly StreamWriter logFile;
 
-        public delegate void DoWhenCloverIDLEMethod(RetrieveDeviceStatusResponse response);
-        public DoWhenCloverIDLEMethod OnRetrieveDeviceStatusResponse_ProcessTransactionWhenIDLE;
+        public delegate void OnCloverDeviceStatus_IDLE_Method(RetrieveDeviceStatusResponse response);
+        public OnCloverDeviceStatus_IDLE_Method OnCloverDeviceStatus_IDLE;
 
         public MainForm()
         {
@@ -103,7 +103,7 @@ namespace CloverRMS
 
             AddCloverButtons(empty);
 
-            OnRetrieveDeviceStatusResponse_ProcessTransactionWhenIDLE = ProcessTrasactionWhenIDLE;
+            OnCloverDeviceStatus_IDLE = ProcessTrasactionWhenIDLE;
             autoConnectCloverTimer.Enabled = true;
         }
 
@@ -465,10 +465,10 @@ namespace CloverRMS
 
             if (response.State == com.clover.remotepay.sdk.ExternalDeviceState.IDLE)
             {
-                if (OnRetrieveDeviceStatusResponse_ProcessTransactionWhenIDLE != null)
+                if (OnCloverDeviceStatus_IDLE != null)
                 {
-                    OnRetrieveDeviceStatusResponse_ProcessTransactionWhenIDLE(response);
-                    OnRetrieveDeviceStatusResponse_ProcessTransactionWhenIDLE = null;
+                    OnCloverDeviceStatus_IDLE(response);
+                    OnCloverDeviceStatus_IDLE = null;
                 }
             }
         }
