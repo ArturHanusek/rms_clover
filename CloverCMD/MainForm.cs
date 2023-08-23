@@ -440,7 +440,10 @@ namespace CloverRMS
         }
 
         public void OnVaultCardResponse(VaultCardResponse response) { }
-        public void OnRetrievePendingPaymentsResponse(RetrievePendingPaymentsResponse response) { }
+        public void OnRetrievePendingPaymentsResponse(RetrievePendingPaymentsResponse response) 
+        {
+            Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
+        }
         public void OnReadCardDataResponse(ReadCardDataResponse response) { }
         public void OnPrintManualRefundReceipt(PrintManualRefundReceiptMessage message) { }
         public void OnPrintManualRefundDeclineReceipt(PrintManualRefundDeclineReceiptMessage message) { }
