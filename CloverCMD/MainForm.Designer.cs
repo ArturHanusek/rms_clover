@@ -67,12 +67,14 @@ namespace CloverRMS
             // panelCenterWindow
             // 
             this.panelCenterWindow.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.panelCenterWindow.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panelCenterWindow.Controls.Add(this.cloverStatusPanel);
             this.panelCenterWindow.Controls.Add(this.CloverButtonsPanel);
-            this.panelCenterWindow.Location = new System.Drawing.Point(575, 143);
-            this.panelCenterWindow.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelCenterWindow.Location = new System.Drawing.Point(140, 150);
+            this.panelCenterWindow.Margin = new System.Windows.Forms.Padding(4);
+            this.panelCenterWindow.MaximumSize = new System.Drawing.Size(800, 350);
             this.panelCenterWindow.Name = "panelCenterWindow";
-            this.panelCenterWindow.Size = new System.Drawing.Size(787, 326);
+            this.panelCenterWindow.Size = new System.Drawing.Size(800, 350);
             this.panelCenterWindow.TabIndex = 10;
             // 
             // cloverStatusPanel
@@ -83,9 +85,9 @@ namespace CloverRMS
             this.cloverStatusPanel.Controls.Add(this.labelTotal);
             this.cloverStatusPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cloverStatusPanel.Location = new System.Drawing.Point(0, 0);
-            this.cloverStatusPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cloverStatusPanel.Margin = new System.Windows.Forms.Padding(4);
             this.cloverStatusPanel.Name = "cloverStatusPanel";
-            this.cloverStatusPanel.Size = new System.Drawing.Size(620, 326);
+            this.cloverStatusPanel.Size = new System.Drawing.Size(633, 350);
             this.cloverStatusPanel.TabIndex = 25;
             // 
             // label1
@@ -95,7 +97,7 @@ namespace CloverRMS
             this.label1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label1.Font = new System.Drawing.Font("Arial", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(12, 241);
+            this.label1.Location = new System.Drawing.Point(25, 416);
             this.label1.Margin = new System.Windows.Forms.Padding(13, 12, 13, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(361, 58);
@@ -124,7 +126,7 @@ namespace CloverRMS
             this.labelTotal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.labelTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTotal.ForeColor = System.Drawing.Color.Black;
-            this.labelTotal.Location = new System.Drawing.Point(381, 241);
+            this.labelTotal.Location = new System.Drawing.Point(394, 416);
             this.labelTotal.Margin = new System.Windows.Forms.Padding(13, 12, 13, 12);
             this.labelTotal.Name = "labelTotal";
             this.labelTotal.Size = new System.Drawing.Size(215, 58);
@@ -138,10 +140,10 @@ namespace CloverRMS
             this.CloverButtonsPanel.Controls.Add(this.button2);
             this.CloverButtonsPanel.Controls.Add(this.button3);
             this.CloverButtonsPanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.CloverButtonsPanel.Location = new System.Drawing.Point(620, 0);
-            this.CloverButtonsPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CloverButtonsPanel.Location = new System.Drawing.Point(633, 0);
+            this.CloverButtonsPanel.Margin = new System.Windows.Forms.Padding(4);
             this.CloverButtonsPanel.Name = "CloverButtonsPanel";
-            this.CloverButtonsPanel.Size = new System.Drawing.Size(167, 326);
+            this.CloverButtonsPanel.Size = new System.Drawing.Size(167, 350);
             this.CloverButtonsPanel.TabIndex = 23;
             // 
             // button1
@@ -150,7 +152,7 @@ namespace CloverRMS
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.ForeColor = System.Drawing.SystemColors.Window;
             this.button1.Location = new System.Drawing.Point(4, 4);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(160, 74);
             this.button1.TabIndex = 3;
@@ -164,7 +166,7 @@ namespace CloverRMS
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.ForeColor = System.Drawing.SystemColors.Window;
             this.button2.Location = new System.Drawing.Point(4, 86);
-            this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button2.Margin = new System.Windows.Forms.Padding(4);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(160, 74);
             this.button2.TabIndex = 4;
@@ -178,7 +180,7 @@ namespace CloverRMS
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button3.ForeColor = System.Drawing.SystemColors.Window;
             this.button3.Location = new System.Drawing.Point(4, 168);
-            this.button3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button3.Margin = new System.Windows.Forms.Padding(4);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(160, 74);
             this.button3.TabIndex = 5;
@@ -195,7 +197,7 @@ namespace CloverRMS
             // splitter1
             // 
             this.splitter1.Location = new System.Drawing.Point(13, 12);
-            this.splitter1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.splitter1.Margin = new System.Windows.Forms.Padding(4);
             this.splitter1.Name = "splitter1";
             this.splitter1.Size = new System.Drawing.Size(4, 818);
             this.splitter1.TabIndex = 19;
@@ -206,8 +208,8 @@ namespace CloverRMS
             this.panel1.Controls.Add(this.panelButtonsRight);
             this.panel1.Controls.Add(this.menuButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel1.Location = new System.Drawing.Point(1539, 12);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel1.Location = new System.Drawing.Point(793, 12);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(200, 818);
             this.panel1.TabIndex = 20;
@@ -260,7 +262,7 @@ namespace CloverRMS
             this.ManualCardEntryButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ManualCardEntryButton.ForeColor = System.Drawing.Color.White;
             this.ManualCardEntryButton.Location = new System.Drawing.Point(0, 62);
-            this.ManualCardEntryButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ManualCardEntryButton.Margin = new System.Windows.Forms.Padding(4);
             this.ManualCardEntryButton.Name = "ManualCardEntryButton";
             this.ManualCardEntryButton.Size = new System.Drawing.Size(187, 37);
             this.ManualCardEntryButton.TabIndex = 38;
@@ -273,7 +275,7 @@ namespace CloverRMS
             this.showHideLogsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.showHideLogsButton.ForeColor = System.Drawing.Color.White;
             this.showHideLogsButton.Location = new System.Drawing.Point(0, 369);
-            this.showHideLogsButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.showHideLogsButton.Margin = new System.Windows.Forms.Padding(4);
             this.showHideLogsButton.Name = "showHideLogsButton";
             this.showHideLogsButton.Size = new System.Drawing.Size(187, 37);
             this.showHideLogsButton.TabIndex = 36;
@@ -300,7 +302,7 @@ namespace CloverRMS
             this.ResetDeviceButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ResetDeviceButton.ForeColor = System.Drawing.Color.White;
             this.ResetDeviceButton.Location = new System.Drawing.Point(0, 308);
-            this.ResetDeviceButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ResetDeviceButton.Margin = new System.Windows.Forms.Padding(4);
             this.ResetDeviceButton.Name = "ResetDeviceButton";
             this.ResetDeviceButton.Size = new System.Drawing.Size(187, 37);
             this.ResetDeviceButton.TabIndex = 30;
@@ -313,7 +315,7 @@ namespace CloverRMS
             this.ConnectCloverButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ConnectCloverButton.ForeColor = System.Drawing.Color.White;
             this.ConnectCloverButton.Location = new System.Drawing.Point(0, 246);
-            this.ConnectCloverButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ConnectCloverButton.Margin = new System.Windows.Forms.Padding(4);
             this.ConnectCloverButton.Name = "ConnectCloverButton";
             this.ConnectCloverButton.Size = new System.Drawing.Size(187, 37);
             this.ConnectCloverButton.TabIndex = 29;
@@ -328,7 +330,7 @@ namespace CloverRMS
             this.ForceCloseButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ForceCloseButton.ForeColor = System.Drawing.Color.White;
             this.ForceCloseButton.Location = new System.Drawing.Point(0, 744);
-            this.ForceCloseButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ForceCloseButton.Margin = new System.Windows.Forms.Padding(4);
             this.ForceCloseButton.Name = "ForceCloseButton";
             this.ForceCloseButton.Size = new System.Drawing.Size(200, 37);
             this.ForceCloseButton.TabIndex = 23;
@@ -358,10 +360,10 @@ namespace CloverRMS
             this.textBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxLog.ForeColor = System.Drawing.Color.White;
             this.textBoxLog.Location = new System.Drawing.Point(13, 12);
-            this.textBoxLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBoxLog.Margin = new System.Windows.Forms.Padding(4);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
-            this.textBoxLog.Size = new System.Drawing.Size(1726, 818);
+            this.textBoxLog.Size = new System.Drawing.Size(980, 818);
             this.textBoxLog.TabIndex = 24;
             this.textBoxLog.Visible = false;
             this.textBoxLog.WordWrap = false;
@@ -384,14 +386,14 @@ namespace CloverRMS
             this.AutoSize = true;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.Color.DimGray;
-            this.ClientSize = new System.Drawing.Size(1752, 842);
+            this.ClientSize = new System.Drawing.Size(1006, 842);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.splitter1);
             this.Controls.Add(this.panelCenterWindow);
             this.Controls.Add(this.textBoxLog);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainForm";
             this.Padding = new System.Windows.Forms.Padding(13, 12, 13, 12);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
