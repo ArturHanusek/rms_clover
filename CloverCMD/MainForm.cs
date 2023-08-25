@@ -17,7 +17,7 @@ namespace CloverRMS
 {
     public partial class MainForm : Form, ICloverConnectorListener
     {
-        const string RELEASE_VERSION = "Release 2023.08.24";
+        const string RELEASE_VERSION = "Release 2023.08.25";
         const string CLOVER_SDK_VERSION = "Clover SDK: 4.0.6";
         const int SALE_RESPONSE_FAILED = 1001;
         const int SALE_RESPONSE_FAILED_INCORRECT_GUID = 1002;
