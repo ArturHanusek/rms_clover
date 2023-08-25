@@ -306,10 +306,11 @@ namespace CloverRMS
                 {
                     case ResponseCode.SUCCESS:
                         Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.id: " + response.Credit.id);
+                        Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.orderRef: " + response.Credit.orderRef);
                         Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.externalReferenceId: " + response.Credit.externalReferenceId);
                         Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.amount:" + response.Credit.amount);
 
-                        if ((response.Credit.externalReferenceId == Clover._guid) && (response.Credit.amount == Math.Abs(Clover._amount)))
+                        if (response.Credit.amount == Math.Abs(Clover._amount))
                         {
                             SaveManualRefundResponseToFile(response);
                             Clover.ResetDevice();
