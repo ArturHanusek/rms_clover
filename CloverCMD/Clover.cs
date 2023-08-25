@@ -148,7 +148,7 @@ namespace CloverRMS
             ManualRefundRequest request = new ManualRefundRequest()
             {
                 ExternalId = this._guid,
-                Amount = -Amount,
+                Amount = Math.Abs(Amount),
                 DisableDuplicateChecking = true,
                 DisableReceiptSelection = true,
             };

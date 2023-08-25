@@ -17,7 +17,7 @@ namespace CloverRMS
 {
     public partial class MainForm : Form, ICloverConnectorListener
     {
-        const string RELEASE_VERSION = "Release 2023.08.23";
+        const string RELEASE_VERSION = "Release 2023.08.24";
         const string CLOVER_SDK_VERSION = "Clover SDK: 4.0.6";
         const int SALE_RESPONSE_FAILED = 1001;
         const int SALE_RESPONSE_FAILED_INCORRECT_GUID = 1002;
@@ -309,7 +309,7 @@ namespace CloverRMS
                         Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.externalReferenceId: " + response.Credit.externalReferenceId);
                         Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "; Payment.amount:" + response.Credit.amount);
 
-                        if ((response.Credit.externalReferenceId == Clover._guid) && (response.Credit.amount == Clover._amount))
+                        if ((response.Credit.externalReferenceId == Clover._guid) && (response.Credit.amount == Math.Abs(Clover._amount)))
                         {
                             SaveManualRefundResponseToFile(response);
                             Clover.ResetDevice();
