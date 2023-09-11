@@ -57,6 +57,7 @@ namespace CloverRMS
             this.textBoxLog = new System.Windows.Forms.TextBox();
             this.autoConnectCloverTimer = new System.Windows.Forms.Timer(this.components);
             this.forceCloseButtonActivateTimer = new System.Windows.Forms.Timer(this.components);
+            this.textBoxVersion = new System.Windows.Forms.TextBox();
             this.panelCenterWindow.SuspendLayout();
             this.cloverStatusPanel.SuspendLayout();
             this.CloverButtonsPanel.SuspendLayout();
@@ -379,6 +380,22 @@ namespace CloverRMS
             this.forceCloseButtonActivateTimer.Tag = "";
             this.forceCloseButtonActivateTimer.Tick += new System.EventHandler(this.ForceCloseButtonActivateTimer_Tick);
             // 
+            // textBoxVersion
+            // 
+            this.textBoxVersion.BackColor = System.Drawing.Color.DimGray;
+            this.textBoxVersion.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxVersion.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.textBoxVersion.ForeColor = System.Drawing.Color.White;
+            this.textBoxVersion.Location = new System.Drawing.Point(17, 810);
+            this.textBoxVersion.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxVersion.Multiline = true;
+            this.textBoxVersion.Name = "textBoxVersion";
+            this.textBoxVersion.Size = new System.Drawing.Size(776, 20);
+            this.textBoxVersion.TabIndex = 25;
+            this.textBoxVersion.Text = "v2023.00.00";
+            this.textBoxVersion.Visible = false;
+            this.textBoxVersion.WordWrap = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -387,6 +404,7 @@ namespace CloverRMS
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.Color.DimGray;
             this.ClientSize = new System.Drawing.Size(1006, 842);
+            this.Controls.Add(this.textBoxVersion);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.splitter1);
             this.Controls.Add(this.panelCenterWindow);
@@ -438,6 +456,7 @@ namespace CloverRMS
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Timer autoConnectCloverTimer;
         private System.Windows.Forms.Timer forceCloseButtonActivateTimer;
+        private System.Windows.Forms.TextBox textBoxVersion;
     }
 }
 

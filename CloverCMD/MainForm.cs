@@ -17,10 +17,11 @@ namespace CloverRMS
 {
     public partial class MainForm : Form, ICloverConnectorListener
     {
-        const string RELEASE_VERSION = "Release 2023.08.25";
+        const string RELEASE_VERSION = "Release 2023.09.11";
         const string CLOVER_SDK_VERSION = "Clover SDK: 4.0.6";
         const int SALE_RESPONSE_FAILED = 1001;
         const int SALE_RESPONSE_FAILED_INCORRECT_GUID = 1002;
+        
 
         private Clover Clover;
 
@@ -98,6 +99,7 @@ namespace CloverRMS
             this.Log("");
             this.Log(RELEASE_VERSION);
             this.Log(CLOVER_SDK_VERSION);
+            textBoxVersion.Text = RELEASE_VERSION;
 
             InputOption[] empty = { };
 
@@ -436,8 +438,7 @@ namespace CloverRMS
         {
             Log("Clover." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
             SetStatus("Device disconnected. Please make sure: \nYour USB cable is plugged into both devices \nUSB Pay Display is turned on on Clover device");
-
-            Environment.Exit(999);
+            autoConnectCloverTimer.Enabled = true;
         }
 
         public void OnVaultCardResponse(VaultCardResponse response) { }
@@ -537,21 +538,28 @@ namespace CloverRMS
         {
             Log("UI." + System.Reflection.MethodBase.GetCurrentMethod().Name + "()");
 
-            try
-            {
-                Log("Closing current connection...");
-                SetStatus("Closing current connection...");
-                Clover.Dispose();
-            } 
-            catch (Exception exception)
-            {
-                Log("Exception " + exception.Message);
-            }
-            finally
-            {
-                Clover = null;
-            }
+            ReconnectClover();
+        }
 
+        private void ReconnectClover()
+        {
+            if (Clover != null)
+            {
+                try
+                {
+                    Log("Closing current connection...");
+                    SetStatus("Closing current connection...");
+                    Clover.Dispose();
+                }
+                catch (Exception exception)
+                {
+                    Log("Exception " + exception.Message);
+                }
+                finally
+                {
+                    Clover = null;
+                }
+            }
 
             Log("Creating new connection...");
             SetStatus("Creating new connection...");
@@ -560,6 +568,8 @@ namespace CloverRMS
                 DoOnSaleResponse = OnSaleResponseMethod,
                 DoOnManualRefundResponse = OnManualRefundResponseMethod
             };
+
+            LoadTransactionAmount();
         }
 
         private void CloseWindowButton_Click(object sender, EventArgs e)
@@ -615,16 +625,7 @@ namespace CloverRMS
         {
             autoConnectCloverTimer.Enabled = false;
 
-            if (Clover == null)
-            {
-                Clover = new Clover(this)
-                {
-                    DoOnSaleResponse = OnSaleResponseMethod,
-                    DoOnManualRefundResponse = OnManualRefundResponseMethod
-                };
-
-                LoadTransactionAmount();
-            } 
+            ReconnectClover();
         }
 
         private void ForceCloseButtonActivateTimer_Tick(object sender, EventArgs e)
