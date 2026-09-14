@@ -1,0 +1,46 @@
+name: Build CloverCMD
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore NuGet packages
+        run: nuget restore CloverCMD\packages.config -PackagesDirectory CloverCMD\packages
+
+      # windows-latest runners no longer ship the .NET Framework 4.5.2 targeting pack,
+      # so the reference assemblies come from NuGet and FrameworkPathOverride points at them.
+      - name: Install .NET Framework 4.5.2 reference assemblies
+        run: nuget install Microsoft.NETFramework.ReferenceAssemblies.net452 -Version 1.0.3 -OutputDirectory refasm
+
+      - name: Build CloverCMD (Release)
+        run: msbuild CloverCMD\CloverCMD.csproj /p:Configuration=Release /p:FrameworkPathOverride="${{ github.workspace }}\refasm\Microsoft.NETFramework.ReferenceAssemblies.net452.1.0.3\build\.NETFramework\v4.5.2" /p:AutoGenerateBindingRedirects=false
+
+      # The Release OutputPath in CloverCMD.csproj is ..\Install\CloverCMD\,
+      # so the freshly built exe lands in the complete install set.
+      - name: Package install folder
+        run: Compress-Archive -Path Install\CloverCMD -DestinationPath CloverCMD-${{ github.ref_name }}.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CloverCMD-${{ github.ref_name }}
+          path: CloverCMD-${{ github.ref_name }}.zip
+
+      - name: Attach to release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" "CloverCMD-${{ github.ref_name }}.zip" --title "CloverCMD ${{ github.ref_name }}" --notes "Automated build of CloverCMD ${{ github.ref_name }}" || gh release upload "${{ github.ref_name }}" "CloverCMD-${{ github.ref_name }}.zip" --clobber
